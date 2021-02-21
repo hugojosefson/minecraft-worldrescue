@@ -1,0 +1,14 @@
+name: WorldRebuild
+version: 1.2.4
+description: Backup/Restore your world.
+author: tobynextdoor
+
+main: de.tobynextdoor.WorldRebuild.WorldRebuild
+
+commands:
+    worldrebuild:
+      description: Manage your backups.
+      usage: </worldrebuild> <command>
+    wr:
+      description: Manage your backups.
+      usage: </wr> <command>
