@@ -8,12 +8,37 @@
   <version>1.2.5-SNAPSHOT</version>
   <name>WorldRebuild</name>
   <description>Backup/Restore your world.</description>
-
+  <licenses>
+    <license>
+      <name>GNU General Public License v3.0 only</name>
+      <url>https://www.gnu.org/licenses/gpl-3.0.html</url>
+      <distribution>manual</distribution>
+      <comments>License info via https://web.archive.org/web/20200808063349/https://dev.bukkit.org/projects/worldrebuild</comments>
+    </license>
+  </licenses>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mainClass>de.tobynextdoor.WorldRebuild.WorldRebuild</mainClass>
     <author>tobynextdoor</author>
   </properties>
+  <developers>
+    <developer>
+      <id>tobynextdoor</id>
+      <email>tobynextdoor@gmail.com</email>
+      <roles>
+        <role>founder</role>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>hugojosefson</id>
+      <email>hugo@josefson.org</email>
+      <url>https://www.hugojosefson.com/</url>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
   <build>
     <resources>
       <resource>
@@ -51,6 +76,11 @@
       <url>https://papermc.io/repo/repository/maven-public/</url>
     </repository>
   </repositories>
+  <scm>
+    <url>https://github.com/hugojosefson/minecraft-worldrebuild</url>
+    <connection>scm:git:https://github.com/hugojosefson/minecraft-worldrebuild</connection>
+    <developerConnection>scm:git:[fetch=]https://github.com/hugojosefson/minecraft-worldrebuild[push=]scm:git:https://github.com/hugojosefson/minecraft-worldrebuild</developerConnection>
+  </scm>
   <dependencies>
     <dependency>
       <groupId>org.bukkit</groupId>

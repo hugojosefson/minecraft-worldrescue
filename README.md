@@ -1,16 +1,18 @@
 # WorldRebuild
 
-Trying to resurrect the WorldRebuild plugin for Bukkit.
+Trying to resurrect the WorldRebuild plugin for Bukkit compatible Minecraft servers.
 
-Apparently, it's GPLv3
-licensed: [https://web.archive.org/web/20200808063349/https://dev.bukkit.org/projects/worldrebuild](https://web.archive.org/web/20200808063349/https://dev.bukkit.org/projects/worldrebuild)
+Apparently, it's GPLv3 licensed according to
+[https://dev.bukkit.org/projects/worldrebuild](https://dev.bukkit.org/projects/worldrebuild)
+([archived 2020-AUG-08](https://web.archive.org/web/20200808063349/https://dev.bukkit.org/projects/worldrebuild)).
+I assume the plugin author created that plugin page, and was the one who selected the license.
 
-I have downloaded the .jar file, and decompiled it.
+## TODO/TODONE
 
-## TODO
-
+- [x] Download the `WordRebuild.jar` file, version 1.2.4 from 2014-FEB-18.
+- [x] Decompile `WordRebuild.jar`.
 - [x] Create `pom.xml`.
+- [x] Update according to new APIs, so it compiles.
 - [ ] Refactor a little, to acquaint myself with the code.
-- [x] Update according to new APIs.
-- [ ] Make sure it works.
-- [ ] Attempt to contact the original author tobynextdoor, to present my findings.
+- [ ] Make sure it works in an up-to-date Bukkit, Spigot and Paper server.
+- [ ] Attempt to contact the original author *tobynextdoor*, to present my findings.
