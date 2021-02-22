@@ -13,7 +13,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 public class WorldRebuildCommands implements CommandExecutor {
   public WorldRebuild plugin;
@@ -105,7 +104,7 @@ public class WorldRebuildCommands implements CommandExecutor {
       if (args[1].equals("me") && player != null) {
         args[1] = player.getWorld().getName();
       }
-      Bukkit.getScheduler().runTask((Plugin) this.plugin, (Runnable) new Runnable() {
+      Bukkit.getScheduler().runTask(this.plugin, new Runnable() {
         @Override
         public void run() {
           final String world = args[1];
@@ -138,7 +137,7 @@ public class WorldRebuildCommands implements CommandExecutor {
   public boolean list(final Player player, final String[] args) {
     if ((args.length > 0 && player != null) || (player == null && args.length > 1)) {
       String listWorld;
-      if (args.length == 1 && player != null) {
+      if (args.length == 1) {
         listWorld = player.getWorld().getName();
       } else {
         if (args[1].equals("me") && player != null) {
@@ -190,7 +189,7 @@ public class WorldRebuildCommands implements CommandExecutor {
     if ((args.length > 0 && player != null) || (player == null && args.length > 1)) {
       WorldRebuildCommands.sPlayer = player;
       WorldRebuildCommands.sArgs = args;
-      Bukkit.getScheduler().runTask((Plugin) this.plugin, (Runnable) new Runnable() {
+      Bukkit.getScheduler().runTask(this.plugin, new Runnable() {
         String[] args = WorldRebuildCommands.sArgs;
         Player player = WorldRebuildCommands.sPlayer;
 
@@ -259,7 +258,7 @@ public class WorldRebuildCommands implements CommandExecutor {
             WorldRebuildCommands.playerInWorldLocn = playerInWorldLoc;
             WorldRebuildCommands.playerInWorldn = playerInWorld;
             WorldRebuildCommands.playerInWorldGMn = playerInWorldLGM;
-            Bukkit.getScheduler().runTask((Plugin) WorldRebuildCommands.this.plugin, (Runnable) new Runnable() {
+            Bukkit.getScheduler().runTask(WorldRebuildCommands.this.plugin, new Runnable() {
               String world = WorldRebuildCommands.tempWorld;
               Player[] playerInWorld = WorldRebuildCommands.playerInWorldn;
               Location[] playerInWorldLoc = WorldRebuildCommands.playerInWorldLocn;
@@ -275,7 +274,7 @@ public class WorldRebuildCommands implements CommandExecutor {
                     WorldRebuildCommands.playerInWorldLocn = this.playerInWorldLoc;
                     WorldRebuildCommands.playerInWorldn = this.playerInWorld;
                     WorldRebuildCommands.playerInWorldGMn = this.playerInWorldGM;
-                    Bukkit.getScheduler().runTaskLater((Plugin) WorldRebuildCommands.this.plugin, (Runnable) new Runnable() {
+                    Bukkit.getScheduler().runTaskLater(WorldRebuildCommands.this.plugin, new Runnable() {
                       Player[] playerInWorld = WorldRebuildCommands.playerInWorldn;
                       Location[] playerInWorldLoc = WorldRebuildCommands.playerInWorldLocn;
 
@@ -288,7 +287,7 @@ public class WorldRebuildCommands implements CommandExecutor {
                         }
                       }
                     }, 10L);
-                    Bukkit.getScheduler().runTaskLater((Plugin) WorldRebuildCommands.this.plugin, (Runnable) new Runnable() {
+                    Bukkit.getScheduler().runTaskLater(WorldRebuildCommands.this.plugin, new Runnable() {
                       Player[] playerInWorld = WorldRebuildCommands.playerInWorldn;
                       GameMode[] playerInWorldGM = WorldRebuildCommands.playerInWorldGMn;
 
@@ -335,7 +334,7 @@ public class WorldRebuildCommands implements CommandExecutor {
 
   void create(final String world) {
     if (this.MVinstalled()) {
-      Bukkit.getServer().dispatchCommand((CommandSender) Bukkit.getConsoleSender(), "mv create " + world + " normal");
+      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mv create " + world + " normal");
     } else {
       Bukkit.getServer().createWorld(new WorldCreator(world));
     }
@@ -343,7 +342,7 @@ public class WorldRebuildCommands implements CommandExecutor {
 
   void load(final String world) {
     if (this.MVinstalled()) {
-      Bukkit.getServer().dispatchCommand((CommandSender) Bukkit.getConsoleSender(), "mv load " + world);
+      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mv load " + world);
     } else {
       Bukkit.getServer().createWorld(new WorldCreator(world));
     }
@@ -351,7 +350,7 @@ public class WorldRebuildCommands implements CommandExecutor {
 
   void unload(final String world, final boolean save) {
     if (this.MVinstalled()) {
-      Bukkit.getServer().dispatchCommand((CommandSender) Bukkit.getConsoleSender(), "mv unload " + world);
+      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mv unload " + world);
     } else {
       Bukkit.getServer().unloadWorld(world, save);
     }
@@ -359,7 +358,7 @@ public class WorldRebuildCommands implements CommandExecutor {
 
   void teleport(final Player p, final Location l) {
     if (this.MVinstalled()) {
-      Bukkit.getServer().dispatchCommand((CommandSender) Bukkit.getConsoleSender(), "mvtp " + p.getName() + " e:" + l.getWorld().getName() + ":" + l.getX() + "," + l.getY() + "," + l.getZ());
+      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mvtp " + p.getName() + " e:" + l.getWorld().getName() + ":" + l.getX() + "," + l.getY() + "," + l.getZ());
     } else {
       p.teleport(l);
     }
@@ -367,9 +366,9 @@ public class WorldRebuildCommands implements CommandExecutor {
 
   void delete(final String world) {
     if (this.MVinstalled()) {
-      Bukkit.getServer().dispatchCommand((CommandSender) Bukkit.getConsoleSender(), "mv load " + world);
-      Bukkit.getServer().dispatchCommand((CommandSender) Bukkit.getConsoleSender(), "mv delete " + world);
-      Bukkit.getServer().dispatchCommand((CommandSender) Bukkit.getConsoleSender(), "mv confirm");
+      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mv load " + world);
+      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mv delete " + world);
+      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mv confirm");
     } else {
       this.IO.delete(world);
     }

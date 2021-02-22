@@ -5,12 +5,9 @@
 package de.tobynextdoor.WorldRebuild;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class WorldRebuild extends JavaPlugin {
-  public Plugin plugin;
   public WorldRebuildCommands commands;
 
   public WorldRebuild() {
@@ -18,10 +15,10 @@ public class WorldRebuild extends JavaPlugin {
   }
 
   public void onEnable() {
-    Bukkit.getPluginCommand("worldrebuild").setExecutor((CommandExecutor) this.commands);
-    Bukkit.getPluginCommand("wr").setExecutor((CommandExecutor) this.commands);
+    Bukkit.getPluginCommand("worldrebuild").setExecutor(this.commands);
+    Bukkit.getPluginCommand("wr").setExecutor(this.commands);
     if (this.getConfig().getBoolean("Autosave.Enabled")) {
-      Bukkit.getScheduler().scheduleSyncRepeatingTask((Plugin) this, (Runnable) new WorldRebuildAutosaveRunnable(), 0L, this.getConfig().getInt("Autosave.Frequency (in min)") * 60 * 20L);
+      Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new WorldRebuildAutosaveRunnable(), 0L, this.getConfig().getInt("Autosave.Frequency (in min)") * 60 * 20L);
     }
     this.getConfig().options().copyDefaults(true);
     this.saveConfig();
