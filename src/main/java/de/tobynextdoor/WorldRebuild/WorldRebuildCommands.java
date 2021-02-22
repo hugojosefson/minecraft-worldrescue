@@ -223,9 +223,9 @@ public class WorldRebuildCommands implements CommandExecutor {
           } else {
             WorldRebuildCommands.this.sendMessage(this.player, ChatColor.GOLD + "Rebuilding the world '" + world + "' (" + arg + ")...");
           }
-          final Player[] playerInWorld = new Player[Bukkit.getOnlinePlayers().length];
-          final Location[] playerInWorldLoc = new Location[Bukkit.getOnlinePlayers().length];
-          final GameMode[] playerInWorldLGM = new GameMode[Bukkit.getOnlinePlayers().length];
+          final Player[] playerInWorld = new Player[Bukkit.getOnlinePlayers().size()];
+          final Location[] playerInWorldLoc = new Location[Bukkit.getOnlinePlayers().size()];
+          final GameMode[] playerInWorldLGM = new GameMode[Bukkit.getOnlinePlayers().size()];
           int i = 0;
           boolean isDefault = false;
           if (Bukkit.getServer().getWorld(world) == Bukkit.getServer().getWorlds().get(0)) {
