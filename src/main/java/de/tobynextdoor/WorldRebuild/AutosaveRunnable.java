@@ -9,10 +9,10 @@ import org.bukkit.World;
 
 import java.util.List;
 
-public class WorldRebuildAutosaveRunnable implements Runnable {
+public class AutosaveRunnable implements Runnable {
   WorldRebuildCommands cmd;
 
-  public WorldRebuildAutosaveRunnable() {
+  public AutosaveRunnable() {
     this.cmd = new WorldRebuildCommands((WorldRebuild) Bukkit.getPluginManager().getPlugin("WorldRebuild"));
   }
 

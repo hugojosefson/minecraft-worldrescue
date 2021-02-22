@@ -87,5 +87,11 @@
       <artifactId>bukkit</artifactId>
       <version>1.15.2-R0.1-20200624.001047-124</version>
     </dependency>
+    <dependency>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations</artifactId>
+      <version>18.0.0</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 </project>

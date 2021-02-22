@@ -5,24 +5,50 @@
 package de.tobynextdoor.WorldRebuild;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public class WorldRebuild extends JavaPlugin {
-  public WorldRebuildCommands commands;
+  public final WorldRebuildCommands commands;
 
   public WorldRebuild() {
     this.commands = new WorldRebuildCommands(this);
   }
 
   public void onEnable() {
-    Bukkit.getPluginCommand("worldrebuild").setExecutor(this.commands);
-    Bukkit.getPluginCommand("wr").setExecutor(this.commands);
-    if (this.getConfig().getBoolean("Autosave.Enabled")) {
-      Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new WorldRebuildAutosaveRunnable(), 0L, this.getConfig().getInt("Autosave.Frequency (in min)") * 60 * 20L);
+    getPluginCommand("worldrebuild").setExecutor(this.commands);
+    getPluginCommand("wr").setExecutor(this.commands);
+
+    final FileConfiguration config = this.getConfig();
+
+    if (config.getBoolean("Autosave.Enabled")) {
+      scheduleAutosave(config);
     }
-    this.getConfig().options().copyDefaults(true);
+
+    config.options().copyDefaults(true);
     this.saveConfig();
+
     System.out.println("[" + this.getDescription().getName() + "] " + this.getDescription().getVersion() + " (by tobynextdoor) enabled.");
+  }
+
+  private void scheduleAutosave(final FileConfiguration config) {
+    final long delay = 0L;
+    final long period = 20L * 60 * config.getInt("Autosave.Frequency (in min)");
+    Bukkit.getScheduler().scheduleSyncRepeatingTask(
+      this,
+      new AutosaveRunnable(),
+      delay,
+      period
+    );
+  }
+
+  @NotNull
+  private static PluginCommand getPluginCommand(final String command) throws PluginCommandNotFoundException {
+    final PluginCommand pluginCommand = Bukkit.getPluginCommand(command);
+    if (pluginCommand == null) throw new PluginCommandNotFoundException(command);
+    return pluginCommand;
   }
 
   public void onDisable() {
