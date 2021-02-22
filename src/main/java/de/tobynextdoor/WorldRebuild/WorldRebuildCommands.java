@@ -18,7 +18,7 @@ public class WorldRebuildCommands implements CommandExecutor {
   public WorldRebuild plugin;
   WorldRebuildIO IO;
   static String tempWorld;
-  boolean erfolg;
+  boolean isSuccess;
   static Player sPlayer;
   static String[] sArgs;
   static Player[] playerInWorldn;
@@ -30,7 +30,8 @@ public class WorldRebuildCommands implements CommandExecutor {
     this.plugin = plugin;
   }
 
-  public boolean onCommand(final CommandSender sender, final Command cmd, final String commandLable, final String[] args) {
+  @Override
+  public boolean onCommand(final CommandSender sender, final Command cmd, final String commandLabel, final String[] args) {
     Player player;
     if (sender instanceof Player) {
       player = (Player) sender;
@@ -87,8 +88,8 @@ public class WorldRebuildCommands implements CommandExecutor {
         args[1] = player.getWorld().getName();
       }
       final String world = args[1] + "_" + args[2] + "#backup";
-      this.erfolg = this.IO.delete(world);
-      if (this.erfolg) {
+      this.isSuccess = this.IO.delete(world);
+      if (this.isSuccess) {
         Bukkit.getServer().broadcastMessage(player.getDisplayName() + ChatColor.GREEN + " deleted the backup '" + args[1] + "' (" + args[2] + ").");
       } else {
         this.sendMessage(player, ChatColor.DARK_RED + "The backup '" + args[1] + "' (" + args[2] + ") does not exist.");
@@ -113,8 +114,8 @@ public class WorldRebuildCommands implements CommandExecutor {
           WorldRebuildCommands.this.create(nWorld);
           WorldRebuildCommands.this.unload(nWorld, true);
           final WorldRebuildIO IO = new WorldRebuildIO();
-          WorldRebuildCommands.this.erfolg = IO.copy(world, nWorld);
-          if (WorldRebuildCommands.this.erfolg) {
+          WorldRebuildCommands.this.isSuccess = IO.copy(world, nWorld);
+          if (WorldRebuildCommands.this.isSuccess) {
             IO.delete(nWorld + "/uid.dat");
             WorldRebuildCommands.this.load(nWorld);
             if (WorldRebuildCommands.this.MVinstalled()) {
@@ -146,16 +147,16 @@ public class WorldRebuildCommands implements CommandExecutor {
         listWorld = args[1];
       }
       int reqworldex = 0;
-      String[] welten = new String[100];
+      String[] worlds = new String[100];
       final String[] reqworldbackex = new String[100];
-      welten = this.IO.list(welten, listWorld);
-      if (welten[0].equals("#")) {
+      worlds = this.IO.list(worlds, listWorld);
+      if (worlds[0].equals("#")) {
         this.sendMessage(player, ChatColor.DARK_RED + "The world '" + listWorld + "' does not exist.");
         return true;
       }
-      for (int i = 0; i < welten.length && welten[i] != null; ++i) {
-        if (welten[i].split("'")[1].equals(listWorld)) {
-          reqworldbackex[reqworldex] = welten[i];
+      for (int i = 0; i < worlds.length && worlds[i] != null; ++i) {
+        if (worlds[i].split("'")[1].equals(listWorld)) {
+          reqworldbackex[reqworldex] = worlds[i];
           ++reqworldex;
         }
       }
@@ -250,9 +251,9 @@ public class WorldRebuildCommands implements CommandExecutor {
             }
             WorldRebuildCommands.this.unload(world, true);
             if (this.args[0].equalsIgnoreCase("save")) {
-              WorldRebuildCommands.this.erfolg = WorldRebuildCommands.this.IO.copy(world, backup);
+              WorldRebuildCommands.this.isSuccess = WorldRebuildCommands.this.IO.copy(world, backup);
             } else {
-              WorldRebuildCommands.this.erfolg = WorldRebuildCommands.this.IO.copy(backup, world);
+              WorldRebuildCommands.this.isSuccess = WorldRebuildCommands.this.IO.copy(backup, world);
             }
             WorldRebuildCommands.tempWorld = world;
             WorldRebuildCommands.playerInWorldLocn = playerInWorldLoc;
@@ -304,17 +305,17 @@ public class WorldRebuildCommands implements CommandExecutor {
                 }
               }
             });
-            if (WorldRebuildCommands.this.erfolg && this.player != null) {
+            if (WorldRebuildCommands.this.isSuccess && this.player != null) {
               if (this.args[0].equalsIgnoreCase("save")) {
                 Bukkit.getServer().broadcastMessage(this.player.getDisplayName() + ChatColor.GREEN + " saved the world '" + world + "' (" + arg + ").");
               } else {
-                Bukkit.getServer().broadcastMessage(this.player.getDisplayName() + ChatColor.GREEN + " rebuilded the world '" + world + "' (" + arg + ").");
+                Bukkit.getServer().broadcastMessage(this.player.getDisplayName() + ChatColor.GREEN + " rebuilt the world '" + world + "' (" + arg + ").");
               }
             } else if (this.player != null) {
               if (this.args[0].equalsIgnoreCase("save")) {
-                WorldRebuildCommands.this.sendMessage(this.player, ChatColor.DARK_RED + "The world '" + world + "' with the index '" + arg + "' does not exist.");
+                WorldRebuildCommands.this.sendMessage(this.player, ChatColor.DARK_RED + "The world '" + world + "' with index '" + arg + "' does not exist.");
               } else {
-                WorldRebuildCommands.this.sendMessage(this.player, ChatColor.DARK_RED + "The backup of the world '" + world + "' with the index '" + arg + "' does not exist.");
+                WorldRebuildCommands.this.sendMessage(this.player, ChatColor.DARK_RED + "A backup of the world '" + world + "' with index '" + arg + "' does not exist.");
               }
             }
           }

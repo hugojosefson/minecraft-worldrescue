@@ -12,32 +12,32 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class WorldRebuildIO {
-  public String[] list(final String[] welten, final String src) {
-    final File srcworld = new File(src);
-    if (!srcworld.exists()) {
-      welten[0] = "#";
-      return welten;
+  public String[] list(final String[] worlds, final String sourceWorldId) {
+    final File sourceWorld = new File(sourceWorldId);
+    if (!sourceWorld.exists()) {
+      worlds[0] = "#";
+      return worlds;
     }
     int g = 0;
-    String dirpath = "";
-    final File startdir = new File("plugins");
-    final File[] startfiles = startdir.listFiles();
-    if (startfiles != null) {
-      for (dirpath = startfiles[0].getAbsolutePath(); !dirpath.split("/")[dirpath.split("/").length - 1].equals("plugins"); dirpath = dirpath.substring(0, dirpath.length() - 1)) {
+    String dirPath = "";
+    final File startDir = new File("plugins");
+    final File[] startFiles = startDir.listFiles();
+    if (startFiles != null) {
+      for (dirPath = startFiles[0].getAbsolutePath(); !dirPath.split("/")[dirPath.split("/").length - 1].equals("plugins"); dirPath = dirPath.substring(0, dirPath.length() - 1)) {
       }
-      dirpath = dirpath.substring(0, dirpath.length() - 9);
+      dirPath = dirPath.substring(0, dirPath.length() - 9);
     }
-    final File f = new File(dirpath);
+    final File f = new File(dirPath);
     final File[] files = f.listFiles();
     if (files != null) {
       for (int i = 0; i < files.length; ++i) {
         if (files[i].isDirectory() && files[i].getAbsolutePath().split("#").length > 0 && files[i].getAbsolutePath().split("#")[files[i].getAbsolutePath().split("#").length - 1].equals("backup")) {
-          welten[g] = "   '" + files[i].getAbsolutePath().split("/")[files[i].getAbsolutePath().split("/").length - 1].substring(0, files[i].getAbsolutePath().split("/")[files[i].getAbsolutePath().split("/").length - 1].length() - 7).split("_")[0] + "' (" + files[i].getAbsolutePath().split("/")[files[i].getAbsolutePath().split("/").length - 1].substring(0, files[i].getAbsolutePath().split("/")[files[i].getAbsolutePath().split("/").length - 1].length() - 7).split("_")[1] + ")";
+          worlds[g] = "   '" + files[i].getAbsolutePath().split("/")[files[i].getAbsolutePath().split("/").length - 1].substring(0, files[i].getAbsolutePath().split("/")[files[i].getAbsolutePath().split("/").length - 1].length() - 7).split("_")[0] + "' (" + files[i].getAbsolutePath().split("/")[files[i].getAbsolutePath().split("/").length - 1].substring(0, files[i].getAbsolutePath().split("/")[files[i].getAbsolutePath().split("/").length - 1].length() - 7).split("_")[1] + ")";
           ++g;
         }
       }
     }
-    return welten;
+    return worlds;
   }
 
   public boolean delete(final String src) {
@@ -68,36 +68,36 @@ public class WorldRebuildIO {
     }
   }
 
-  public boolean copy(final String src, final String dest) {
-    final File srcFolder = new File(src);
+  public boolean copy(final String source, final String dest) {
+    final File sourceFolder = new File(source);
     final File destFolder = new File(dest);
-    if (!srcFolder.exists()) {
+    if (!sourceFolder.exists()) {
       return false;
     }
     try {
-      System.out.println("[WorldRebuild] Starting to copy '" + src + "' to '" + dest + "'.");
-      copyFolder(srcFolder, destFolder);
+      System.out.println("[WorldRebuild] Starting to copy '" + source + "' to '" + dest + "'.");
+      copyFolder(sourceFolder, destFolder);
     } catch (IOException ex) {
     }
     System.out.println("[WorldRebuild] Copying finished.");
     return true;
   }
 
-  public static void copyFolder(final File src, final File dest) throws IOException {
-    if (src.isDirectory()) {
+  public static void copyFolder(final File source, final File dest) throws IOException {
+    if (source.isDirectory()) {
       if (!dest.exists()) {
         dest.mkdir();
       }
-      final String[] files = src.list();
+      final String[] files = source.list();
       if (files.length > 0) {
         for (final String file : files) {
-          final File srcFile = new File(src, file);
+          final File sourceFile = new File(source, file);
           final File destFile = new File(dest, file);
-          copyFolder(srcFile, destFile);
+          copyFolder(sourceFile, destFile);
         }
       }
     } else {
-      final InputStream in = new FileInputStream(src);
+      final InputStream in = new FileInputStream(source);
       final OutputStream out = new FileOutputStream(dest);
       final byte[] buffer = new byte[1024];
       int length;
