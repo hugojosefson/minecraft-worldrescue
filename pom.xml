@@ -20,7 +20,7 @@
   </licenses>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <mainClass>de.tobynextdoor.WorldRebuild.WorldRebuild</mainClass>
+    <mainClass>de.tobynextdoor.worldrebuild.WorldRebuild</mainClass>
     <author>tobynextdoor</author>
   </properties>
   <developers>
@@ -67,7 +67,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>de.tobynextdoor.WorldRebuild.WorldRebuildCli</mainClass>
+              <mainClass>de.tobynextdoor.worldrebuild.WorldRebuildCli</mainClass>
             </manifest>
           </archive>
         </configuration>

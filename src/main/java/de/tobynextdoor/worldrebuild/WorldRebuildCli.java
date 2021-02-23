@@ -1,4 +1,4 @@
-package de.tobynextdoor.WorldRebuild;
+package de.tobynextdoor.worldrebuild;
 
 import java.io.BufferedReader;
 import java.io.IOException;

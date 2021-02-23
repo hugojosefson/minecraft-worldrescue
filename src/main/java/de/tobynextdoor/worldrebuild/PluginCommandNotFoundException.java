@@ -1,4 +1,4 @@
-package de.tobynextdoor.WorldRebuild;
+package de.tobynextdoor.worldrebuild;
 
 public class PluginCommandNotFoundException extends RuntimeException {
   public PluginCommandNotFoundException(String command) {

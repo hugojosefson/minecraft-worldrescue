@@ -2,7 +2,7 @@
 // Decompiled by Procyon v0.5.36
 //
 
-package de.tobynextdoor.WorldRebuild;
+package de.tobynextdoor.worldrebuild;
 
 import java.io.File;
 import java.io.FileInputStream;
