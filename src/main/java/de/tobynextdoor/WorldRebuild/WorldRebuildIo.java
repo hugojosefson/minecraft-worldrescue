@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class WorldRebuildIO {
+public class WorldRebuildIo {
   public String[] list(final String[] worlds, final String sourceWorldId) {
     final File sourceWorld = new File(sourceWorldId);
     if (!sourceWorld.exists()) {
