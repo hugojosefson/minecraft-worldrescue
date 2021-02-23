@@ -14,7 +14,7 @@ I assume the plugin author created that plugin page, and was the one who selecte
 - [x] Create `pom.xml`.
 - [x] Update according to new APIs, so it compiles.
 - [x] `java -jar WorldRebuild.jar` should output the version and some instructions.
-- [ ] `java -jar WorldRebuild.jar --version` should output the version.
+- [x] `java -jar WorldRebuild.jar --version` should output the version.
 - [ ] Refactor a little, to acquaint myself with the code.
 - [ ] Make sure it works in an up-to-date Bukkit, Spigot and Paper server.
 - [ ] Attempt to contact the original author *tobynextdoor*, to present my findings.
