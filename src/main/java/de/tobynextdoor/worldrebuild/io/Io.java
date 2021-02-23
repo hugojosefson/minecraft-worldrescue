@@ -6,41 +6,58 @@ package de.tobynextdoor.worldrebuild.io;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.file.PathUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.nio.file.Files.exists;
 
 public class Io {
-  public String[] list(final String[] worlds, final String sourceWorldId) {
-    final File sourceWorld = new File(sourceWorldId);
+
+  public static final String HASH_BACKUP = "#backup";
+
+  public static String[] list(final String world) {
+    final File sourceWorld = new File(world);
     if (!sourceWorld.exists()) {
-      worlds[0] = "#";
-      return worlds;
+      return new String[]{"#"};
     }
-    int g = 0;
-    String dirPath = "";
-    final File startDir = new File("plugins");
-    final File[] startFiles = startDir.listFiles();
-    if (startFiles != null) {
-      for (dirPath = startFiles[0].getAbsolutePath(); !dirPath.split("/")[dirPath.split("/").length - 1].equals("plugins"); dirPath = dirPath.substring(0, dirPath.length() - 1)) {
-      }
-      dirPath = dirPath.substring(0, dirPath.length() - 9);
-    }
-    final File f = new File(dirPath);
-    final File[] files = f.listFiles();
+    final File[] files = new File(getParentPathOf("plugins")).listFiles();
+    final List<String> worlds = new ArrayList<>();
     if (files != null) {
-      for (int i = 0; i < files.length; ++i) {
-        if (files[i].isDirectory() && files[i].getAbsolutePath().split("#").length > 0 && files[i].getAbsolutePath().split("#")[files[i].getAbsolutePath().split("#").length - 1].equals("backup")) {
-          worlds[g] = "   '" + files[i].getAbsolutePath().split("/")[files[i].getAbsolutePath().split("/").length - 1].substring(0, files[i].getAbsolutePath().split("/")[files[i].getAbsolutePath().split("/").length - 1].length() - 7).split("_")[0] + "' (" + files[i].getAbsolutePath().split("/")[files[i].getAbsolutePath().split("/").length - 1].substring(0, files[i].getAbsolutePath().split("/")[files[i].getAbsolutePath().split("/").length - 1].length() - 7).split("_")[1] + ")";
-          ++g;
+      for (File file : files) {
+        final String path = file.getAbsolutePath();
+        if (file.isDirectory() && path.endsWith(HASH_BACKUP)) {
+          final String[] parts = path.split("/");
+          final String dirName = parts[parts.length - 1];
+          final String index = dirName
+            .replace(world + "_", "")
+            .replace(HASH_BACKUP, "");
+          final String s = "   '" + world + "' (" + index + ")";
+          worlds.add(s);
         }
       }
     }
-    return worlds;
+    return worlds.toArray(new String[0]);
+  }
+
+  @NotNull
+  private static String getParentPathOf(String subDirectory) {
+    String dirPath = "";
+    final File startDir = new File(subDirectory);
+    final File[] startFiles = startDir.listFiles();
+    if (startFiles != null) {
+      dirPath = startFiles[0].getAbsolutePath();
+      while (!dirPath.split("/")[dirPath.split("/").length - 1].equals(subDirectory)) {
+        dirPath = dirPath.substring(0, dirPath.length() - 1);
+      }
+      dirPath = dirPath.substring(0, dirPath.length() - 9);
+    }
+    return dirPath;
   }
 
   public static boolean delete(final Path path) {

@@ -30,7 +30,7 @@ public class Commands implements CommandExecutor {
     new SubCommandHandler("save", this::saveRebuild),
     new SubCommandHandler("rebuild", this::saveRebuild),
     new SubCommandHandler("delete", this::delete),
-    new SubCommandHandler("list", this::list),
+    new SubCommandHandler("list", this::listBackups),
     new SubCommandHandler("duplicate", this::duplicate),
     new SubCommandHandler("tp", this::tp)
   };
@@ -109,27 +109,28 @@ public class Commands implements CommandExecutor {
     return true;
   }
 
-  public boolean list(final Player player, final String[] args) {
+  private static String getWorldFromListArgs(final Player player, final String[] args){
+    if (args.length == 1) {
+      return player.getWorld().getName();
+    }
+    if (args[1].equals("me") && player != null) {
+      return player.getWorld().getName();
+    }
+    return args[1];
+  }
+
+  public boolean listBackups(final Player player, final String[] args) {
     if ((args.length > 0 && player != null) || (player == null && args.length > 1)) {
-      String listWorld;
-      if (args.length == 1) {
-        listWorld = player.getWorld().getName();
-      } else {
-        if (args[1].equals("me") && player != null) {
-          args[1] = player.getWorld().getName();
-        }
-        listWorld = args[1];
-      }
+      final String world = getWorldFromListArgs(player, args);
       int reqworldex = 0;
-      String[] worlds = new String[100];
       final String[] reqworldbackex = new String[100];
-      worlds = this.io.list(worlds, listWorld);
+      final String[] worlds = Io.list(world);
       if (worlds[0].equals("#")) {
-        sendMessage(player, ChatColor.DARK_RED + "The world '" + listWorld + "' does not exist.");
+        sendMessage(player, ChatColor.DARK_RED + "The world '" + world + "' does not exist.");
         return true;
       }
       for (int i = 0; i < worlds.length && worlds[i] != null; ++i) {
-        if (worlds[i].split("'")[1].equals(listWorld)) {
+        if (worlds[i].split("'")[1].equals(world)) {
           reqworldbackex[reqworldex] = worlds[i];
           ++reqworldex;
         }
@@ -139,7 +140,7 @@ public class Commands implements CommandExecutor {
         sendMessage(player, ChatColor.GREEN + reqworldbackex[i]);
       }
       if (reqworldex == 0) {
-        sendMessage(player, "There are no backups of the world '" + listWorld + "'.");
+        sendMessage(player, "There are no backups of the world '" + world + "'.");
       }
     } else {
       help(player);
