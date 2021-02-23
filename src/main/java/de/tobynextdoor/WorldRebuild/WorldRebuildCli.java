@@ -12,11 +12,11 @@ import java.util.function.Predicate;
 
 public class WorldRebuildCli {
   public static void main(String[] args) throws IOException {
-    getLinesUntil("plugin.yml", line -> line.startsWith("main:"))
+    getLinesUntil("plugin.yml", line -> line.startsWith("website:"))
       .forEach(System.out::println);
   }
 
-  public static List<String> getLinesUntil(final String classPathResource, Predicate<String> stopWhen) throws IOException {
+  public static List<String> getLinesUntil(final String classPathResource, Predicate<String> stopAfter) throws IOException {
     final InputStream nullableStream = ClassLoader.getSystemResourceAsStream(classPathResource);
     final InputStream stream = Objects.requireNonNull(nullableStream);
     final InputStreamReader streamReader = new InputStreamReader(stream);
@@ -26,8 +26,8 @@ public class WorldRebuildCli {
       for (; ; ) {
         final String line = reader.readLine();
         if (line == null) break;
-        if (stopWhen.test(line)) break;
         result.add(line);
+        if (stopAfter.test(line)) break;
       }
       return result;
     }
