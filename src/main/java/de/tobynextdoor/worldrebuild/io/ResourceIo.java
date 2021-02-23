@@ -1,4 +1,4 @@
-package de.tobynextdoor.worldrebuild;
+package de.tobynextdoor.worldrebuild.io;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,32 +7,22 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.stream;
-import static java.util.function.Predicate.isEqual;
-
-public class WorldRebuildCli {
-
-  public static void main(String[] args) throws IOException {
-    if (stream(args).anyMatch(isEqual("--version"))) {
-      getVersion("plugin.yml").ifPresent(System.out::println);
-    } else {
-      getLinesUntil("plugin.yml", startsWith("website:"))
-        .forEach(System.out::println);
-    }
-  }
-
-  public static Optional<String> getVersion(final String classPathResource) throws IOException {
-    final Stream<String> lines = getLinesUntil(classPathResource, startsWith("version:"));
-    final Stream<String> versionLines = lines.filter(startsWith("version:"));
-    return versionLines.findFirst()
-      .map(line -> line.replaceFirst("version:", ""))
-      .map(String::trim);
-  }
-
+/**
+ * Utility functions dealing with classpath resources.
+ */
+public class ResourceIo {
+  /**
+   * Returns a stream of text lines from a classpath resource, until and including when the predicate returns
+   * {@code true}.
+   *
+   * @param classPathResource Name used in call to {@link ClassLoader#getSystemResourceAsStream(String)}.
+   * @param stopAfter Which line should be the last one returned.
+   * @return A {@link Stream} of {@code String}s, one for each line.
+   * @throws IOException In case underlying {@code java.io} code throws.
+   */
   public static Stream<String> getLinesUntil(final String classPathResource, Predicate<String> stopAfter) throws IOException {
     final InputStream nullableStream = ClassLoader.getSystemResourceAsStream(classPathResource);
     final InputStream nonNullStream = Objects.requireNonNull(nullableStream);
@@ -48,9 +38,5 @@ public class WorldRebuildCli {
       return lines.stream();
     }
 
-  }
-
-  private static Predicate<String> startsWith(final String s) {
-    return line -> line.startsWith(s);
   }
 }

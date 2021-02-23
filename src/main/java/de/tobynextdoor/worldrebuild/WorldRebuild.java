@@ -4,6 +4,9 @@
 
 package de.tobynextdoor.worldrebuild;
 
+import de.tobynextdoor.worldrebuild.autosave.AutosaveRunnable;
+import de.tobynextdoor.worldrebuild.commands.Commands;
+import de.tobynextdoor.worldrebuild.commands.PluginCommandNotFoundException;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,10 +14,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 public class WorldRebuild extends JavaPlugin {
-  public final WorldRebuildCommands commands;
+  public final Commands commands;
 
   public WorldRebuild() {
-    this.commands = new WorldRebuildCommands(this);
+    this.commands = new Commands(this);
   }
 
   public void onEnable() {

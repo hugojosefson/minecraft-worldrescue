@@ -2,7 +2,7 @@
 // Decompiled by Procyon v0.5.36
 //
 
-package de.tobynextdoor.worldrebuild;
+package de.tobynextdoor.worldrebuild.io;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class WorldRebuildIo {
+public class Io {
   public String[] list(final String[] worlds, final String sourceWorldId) {
     final File sourceWorld = new File(sourceWorldId);
     if (!sourceWorld.exists()) {

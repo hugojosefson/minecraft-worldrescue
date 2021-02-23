@@ -2,8 +2,10 @@
 // Decompiled by Procyon v0.5.36
 //
 
-package de.tobynextdoor.worldrebuild;
+package de.tobynextdoor.worldrebuild.commands;
 
+import de.tobynextdoor.worldrebuild.WorldRebuild;
+import de.tobynextdoor.worldrebuild.io.Io;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -16,12 +18,11 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-import java.util.function.BiFunction;
 import java.util.stream.IntStream;
 
-public class WorldRebuildCommands implements CommandExecutor {
+public class Commands implements CommandExecutor {
   public final WorldRebuild plugin;
-  final WorldRebuildIo io;
+  final Io io;
   boolean isSuccess;
 
   private final SubCommandHandler[] subCommandHandlers = new SubCommandHandler[]{
@@ -33,8 +34,8 @@ public class WorldRebuildCommands implements CommandExecutor {
     new SubCommandHandler("tp", this::tp)
   };
 
-  public WorldRebuildCommands(final WorldRebuild plugin) {
-    this.io = new WorldRebuildIo();
+  public Commands(final WorldRebuild plugin) {
+    this.io = new Io();
     this.plugin = plugin;
   }
 
@@ -86,9 +87,9 @@ public class WorldRebuildCommands implements CommandExecutor {
         sendMessage(player, ChatColor.GOLD + "Creating a copy of the world '" + world + "' with the name '" + nWorld + "'. This may take a while.");
         create(nWorld);
         unload(nWorld, true);
-        final WorldRebuildIo IO = new WorldRebuildIo();
-        WorldRebuildCommands.this.isSuccess = IO.copy(world, nWorld);
-        if (WorldRebuildCommands.this.isSuccess) {
+        final Io IO = new Io();
+        Commands.this.isSuccess = IO.copy(world, nWorld);
+        if (Commands.this.isSuccess) {
           IO.delete(nWorld + "/uid.dat");
           load(nWorld);
           if (hasMultiverse()) {
@@ -185,9 +186,9 @@ public class WorldRebuildCommands implements CommandExecutor {
           backup = args[1] + "_" + arg + "#backup";
         }
         if (args[0].equalsIgnoreCase("save")) {
-          WorldRebuildCommands.sendMessage(player, ChatColor.GOLD + "Saving the world '" + world + "' (" + arg + ")...");
+          Commands.sendMessage(player, ChatColor.GOLD + "Saving the world '" + world + "' (" + arg + ")...");
         } else {
-          WorldRebuildCommands.sendMessage(player, ChatColor.GOLD + "Rebuilding the world '" + world + "' (" + arg + ")...");
+          Commands.sendMessage(player, ChatColor.GOLD + "Rebuilding the world '" + world + "' (" + arg + ")...");
         }
         final Player[] playerInWorld = new Player[Bukkit.getOnlinePlayers().size()];
         final Location[] playerInWorldLoc = new Location[Bukkit.getOnlinePlayers().size()];
@@ -198,10 +199,10 @@ public class WorldRebuildCommands implements CommandExecutor {
           isDefault = true;
         }
         if (isDefault) {
-          WorldRebuildCommands.sendMessage(player, ChatColor.RED + "The world '" + world + "' is your default world and due to a Bukkit restrictment WorldRebuild can not create/restore a backup.");
-          WorldRebuildCommands.sendMessage(player, ChatColor.RED + "To solve this problem, type '" + ChatColor.GREEN + "/wr duplicate <world name>" + ChatColor.RED + "'.");
-          WorldRebuildCommands.sendMessage(player, ChatColor.RED + "This will create the new world '" + world + "-new' which will be the same as the world '" + world + "' and WorldRebuild will be abled to create/restore backups from this world.");
-          WorldRebuildCommands.sendMessage(player, ChatColor.RED + "You can also open your server.config and change the point 'level-name' to another world.");
+          Commands.sendMessage(player, ChatColor.RED + "The world '" + world + "' is your default world and due to a Bukkit restrictment WorldRebuild can not create/restore a backup.");
+          Commands.sendMessage(player, ChatColor.RED + "To solve this problem, type '" + ChatColor.GREEN + "/wr duplicate <world name>" + ChatColor.RED + "'.");
+          Commands.sendMessage(player, ChatColor.RED + "This will create the new world '" + world + "-new' which will be the same as the world '" + world + "' and WorldRebuild will be abled to create/restore backups from this world.");
+          Commands.sendMessage(player, ChatColor.RED + "You can also open your server.config and change the point 'level-name' to another world.");
         } else {
           load(Bukkit.getServer().getWorlds().get(0).getName());
           for (final Player pInWorld : Bukkit.getServer().getOnlinePlayers()) {
@@ -209,7 +210,7 @@ public class WorldRebuildCommands implements CommandExecutor {
               playerInWorld[i] = pInWorld;
               playerInWorldLoc[i] = pInWorld.getLocation();
               playerInWorldLGM[i] = pInWorld.getGameMode();
-              if (!WorldRebuildCommands.hasMultiverse()) {
+              if (!Commands.hasMultiverse()) {
                 teleport(pInWorld, Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
               }
               ++i;
@@ -217,22 +218,22 @@ public class WorldRebuildCommands implements CommandExecutor {
           }
           unload(world, true);
           if (args[0].equalsIgnoreCase("save")) {
-            WorldRebuildCommands.this.isSuccess = WorldRebuildCommands.this.io.copy(world, backup);
+            Commands.this.isSuccess = Commands.this.io.copy(world, backup);
           } else {
-            WorldRebuildCommands.this.isSuccess = WorldRebuildCommands.this.io.copy(backup, world);
+            Commands.this.isSuccess = Commands.this.io.copy(backup, world);
           }
-          Bukkit.getScheduler().runTask(WorldRebuildCommands.this.plugin, () -> {
+          Bukkit.getScheduler().runTask(Commands.this.plugin, () -> {
             load(world);
             boolean loaded = false;
             while (!loaded) {
               loaded = Bukkit.getServer().getWorlds().contains(Bukkit.getWorld(world));
               if (loaded) {
-                Bukkit.getScheduler().runTaskLater(WorldRebuildCommands.this.plugin, () ->
+                Bukkit.getScheduler().runTaskLater(Commands.this.plugin, () ->
                   IntStream
                     .range(0, playerInWorld.length)
                     .filter(i12 -> playerInWorld[i12] != null)
                     .forEach(i12 -> teleport(playerInWorld[i12], playerInWorldLoc[i12])), 10L);
-                Bukkit.getScheduler().runTaskLater(WorldRebuildCommands.this.plugin, () ->
+                Bukkit.getScheduler().runTaskLater(Commands.this.plugin, () ->
                   IntStream
                     .range(0, playerInWorld.length)
                     .filter(i1 -> playerInWorld[i1] != null)
@@ -240,7 +241,7 @@ public class WorldRebuildCommands implements CommandExecutor {
               }
             }
           });
-          if (WorldRebuildCommands.this.isSuccess && player != null) {
+          if (Commands.this.isSuccess && player != null) {
             if (args[0].equalsIgnoreCase("save")) {
               Bukkit.getServer().broadcastMessage(player.getDisplayName() + ChatColor.GREEN + " saved the world '" + world + "' (" + arg + ").");
             } else {
@@ -248,9 +249,9 @@ public class WorldRebuildCommands implements CommandExecutor {
             }
           } else if (player != null) {
             if (args[0].equalsIgnoreCase("save")) {
-              WorldRebuildCommands.sendMessage(player, ChatColor.DARK_RED + "The world '" + world + "' with index '" + arg + "' does not exist.");
+              Commands.sendMessage(player, ChatColor.DARK_RED + "The world '" + world + "' with index '" + arg + "' does not exist.");
             } else {
-              WorldRebuildCommands.sendMessage(player, ChatColor.DARK_RED + "A backup of the world '" + world + "' with index '" + arg + "' does not exist.");
+              Commands.sendMessage(player, ChatColor.DARK_RED + "A backup of the world '" + world + "' with index '" + arg + "' does not exist.");
             }
           }
         }
@@ -313,7 +314,7 @@ public class WorldRebuildCommands implements CommandExecutor {
     return Bukkit.getServer().getPluginManager().isPluginEnabled("Multiverse-Core");
   }
 
-  static void sendMessage(final Player receiver, final String message) {
+  public static void sendMessage(final Player receiver, final String message) {
     if (receiver == null) {
       System.out.println("[WorldRebuild] " + message);
       return;
@@ -323,27 +324,3 @@ public class WorldRebuildCommands implements CommandExecutor {
 
 }
 
-class SubCommandHandler {
-  private final String subCommandToHandle;
-  private final String requiredPermission;
-  private final BiFunction<Player, String[], Boolean> action;
-
-  SubCommandHandler(final String subCommandToHandle, final BiFunction<Player, String[], Boolean> action) {
-    this.subCommandToHandle = subCommandToHandle;
-    this.requiredPermission = "worldrebuild." + subCommandToHandle;
-    this.action = action;
-  }
-
-  public boolean handles(final String subCommand) {
-    return subCommandToHandle.equalsIgnoreCase(subCommand);
-  }
-
-  public boolean handle(final Player player, final String[] args) {
-    if (player == null || player.hasPermission(requiredPermission)) {
-      return action.apply(player, args);
-    }
-
-    WorldRebuildCommands.sendMessage(player, ChatColor.DARK_RED + "You lack permission " + requiredPermission + ", which is required for this action.");
-    return true;
-  }
-}

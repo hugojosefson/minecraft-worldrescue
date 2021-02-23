@@ -67,7 +67,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>de.tobynextdoor.worldrebuild.WorldRebuildCli</mainClass>
+              <mainClass>de.tobynextdoor.worldrebuild.Cli</mainClass>
             </manifest>
           </archive>
         </configuration>
