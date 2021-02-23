@@ -1,0 +1,1 @@
+docker run --rm -i hugojosefson/minecraft-worldrebuild:latest
