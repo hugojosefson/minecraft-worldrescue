@@ -2,6 +2,7 @@ name: WorldRebuild
 version: ${project.version}
 description: ${project.description}
 author: tobynextdoor
+website: https://github.com/hugojosefson/minecraft-worldrebuild
 
 main: de.tobynextdoor.WorldRebuild.WorldRebuild
 
