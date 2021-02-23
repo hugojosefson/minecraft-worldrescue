@@ -19,12 +19,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class Commands implements CommandExecutor {
   public final WorldRebuild plugin;
   final Io io;
-  boolean isSuccess;
 
   private final SubCommandHandler[] subCommandHandlers = new SubCommandHandler[]{
     new SubCommandHandler("save", this::saveRebuild),
@@ -65,8 +65,7 @@ public class Commands implements CommandExecutor {
         args[1] = player.getWorld().getName();
       }
       final String world = args[1] + "_" + args[2] + "#backup";
-      this.isSuccess = Io.delete(Paths.get(world));
-      if (this.isSuccess) {
+      if (Io.delete(Paths.get(world))) {
         Bukkit.getServer().broadcastMessage(player.getDisplayName() + ChatColor.GREEN + " deleted the backup '" + args[1] + "' (" + args[2] + ").");
       } else {
         sendMessage(player, ChatColor.DARK_RED + "The backup '" + args[1] + "' (" + args[2] + ") does not exist.");
@@ -83,17 +82,14 @@ public class Commands implements CommandExecutor {
       return true;
     }
 
-    if (args[1].equals("me") && player != null) {
-      args[1] = player.getWorld().getName();
-    }
+    final String world = (args[1].equals("me") && player != null) ? player.getWorld().getName() : args[1];
+
     Bukkit.getScheduler().runTask(this.plugin, () -> {
-      final String world = args[1];
       final String newWorld = world + "-new";
       sendMessage(player, ChatColor.GOLD + "Creating a copy of the world '" + world + "' with the name '" + newWorld + "'. This may take a while.");
       create(newWorld);
       unload(newWorld, true);
-      Commands.this.isSuccess = Io.copy(Paths.get(world), Paths.get(newWorld));
-      if (Commands.this.isSuccess) {
+      if (Io.copy(Paths.get(world), Paths.get(newWorld))) {
         Io.delete(Paths.get(newWorld, "uid.dat"));
         load(newWorld);
         if (hasMultiverse()) {
@@ -109,41 +105,43 @@ public class Commands implements CommandExecutor {
     return true;
   }
 
-  private static String getWorldFromListArgs(final Player player, final String[] args){
+  private static String getWorldFromListBackupsArgs(final Player player, final String[] args) {
     if (args.length == 1) {
       return player.getWorld().getName();
     }
-    if (args[1].equals("me") && player != null) {
+
+    final String world = args[1];
+    if (world.equals("me") && player != null) {
       return player.getWorld().getName();
     }
-    return args[1];
+
+    return world;
   }
 
   public boolean listBackups(final Player player, final String[] args) {
-    if ((args.length > 0 && player != null) || (player == null && args.length > 1)) {
-      final String world = getWorldFromListArgs(player, args);
-      int reqworldex = 0;
-      final String[] reqworldbackex = new String[100];
-      final String[] worlds = Io.list(world);
-      if (worlds[0].equals("#")) {
-        sendMessage(player, ChatColor.DARK_RED + "The world '" + world + "' does not exist.");
-        return true;
-      }
-      for (int i = 0; i < worlds.length && worlds[i] != null; ++i) {
-        if (worlds[i].split("'")[1].equals(world)) {
-          reqworldbackex[reqworldex] = worlds[i];
-          ++reqworldex;
-        }
-      }
-      sendMessage(player, ChatColor.GOLD + "There are " + reqworldex + " backups:");
-      for (int i = 0; i < reqworldex; ++i) {
-        sendMessage(player, ChatColor.GREEN + reqworldbackex[i]);
-      }
-      if (reqworldex == 0) {
-        sendMessage(player, "There are no backups of the world '" + world + "'.");
-      }
-    } else {
+    if ((args.length <= 0 || player == null) && (player != null || args.length <= 1)) {
       help(player);
+      return true;
+    }
+
+    final String world = getWorldFromListBackupsArgs(player, args);
+    final Optional<String[]> maybeBackupIndices = Io.listBackups(Paths.get(world));
+
+    if (!maybeBackupIndices.isPresent()) {
+      sendMessage(player, ChatColor.DARK_RED + "The world '" + world + "' does not exist.");
+      return true;
+    }
+    final String[] backupIndices = maybeBackupIndices.get();
+
+
+    if (backupIndices.length == 0) {
+      sendMessage(player, "There are no backups of the world '" + world + "'.");
+      return true;
+    }
+
+    sendMessage(player, ChatColor.GOLD + "There are " + backupIndices.length + " backups:");
+    for (String backupIndex : backupIndices) {
+      sendMessage(player, ChatColor.GREEN + "   '" + world + "' (" + backupIndex + ")");
     }
     return true;
   }
@@ -219,10 +217,11 @@ public class Commands implements CommandExecutor {
             }
           }
           unload(world, true);
+          final boolean isSuccess;
           if (args[0].equalsIgnoreCase("save")) {
-            Commands.this.isSuccess = Io.copy(Paths.get(world), Paths.get(backup));
+            isSuccess = Io.copy(Paths.get(world), Paths.get(backup));
           } else {
-            Commands.this.isSuccess = Io.copy(Paths.get(backup), Paths.get(world));
+            isSuccess = Io.copy(Paths.get(backup), Paths.get(world));
           }
           Bukkit.getScheduler().runTask(Commands.this.plugin, () -> {
             load(world);
@@ -243,7 +242,7 @@ public class Commands implements CommandExecutor {
               }
             }
           });
-          if (Commands.this.isSuccess && player != null) {
+          if (isSuccess && player != null) {
             if (args[0].equalsIgnoreCase("save")) {
               Bukkit.getServer().broadcastMessage(player.getDisplayName() + ChatColor.GREEN + " saved the world '" + world + "' (" + arg + ").");
             } else {
