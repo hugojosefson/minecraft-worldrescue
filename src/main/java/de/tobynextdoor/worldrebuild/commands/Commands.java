@@ -24,7 +24,6 @@ import java.util.stream.IntStream;
 
 public class Commands implements CommandExecutor {
   public final WorldRebuild plugin;
-  final Io io;
 
   private final SubCommandHandler[] subCommandHandlers = new SubCommandHandler[]{
     new SubCommandHandler("save", this::saveRebuild),
@@ -36,7 +35,6 @@ public class Commands implements CommandExecutor {
   };
 
   public Commands(final WorldRebuild plugin) {
-    this.io = new Io();
     this.plugin = plugin;
   }
 
@@ -82,27 +80,31 @@ public class Commands implements CommandExecutor {
       return true;
     }
 
-    final String world = (args[1].equals("me") && player != null) ? player.getWorld().getName() : args[1];
+    final String world = getWorldWithAnyMe(player, args[1]);
+    final String newWorld = world + "-new"; // TODO: Make sure it doesn't already exist. If so, append a number. Keep looking until an available name+number is found.
 
-    Bukkit.getScheduler().runTask(this.plugin, () -> {
-      final String newWorld = world + "-new";
+    Bukkit.getScheduler().runTask(plugin, () -> {
       sendMessage(player, ChatColor.GOLD + "Creating a copy of the world '" + world + "' with the name '" + newWorld + "'. This may take a while.");
       create(newWorld);
       unload(newWorld, true);
       if (Io.copy(Paths.get(world), Paths.get(newWorld))) {
         Io.delete(Paths.get(newWorld, "uid.dat"));
         load(newWorld);
-        if (hasMultiverse()) {
-          sendMessage(player, ChatColor.GOLD + "Done. Now just type '" + ChatColor.GREEN + "/mvtp " + newWorld + ChatColor.GOLD + "' and use this world to continue building.");
-        } else {
-          sendMessage(player, ChatColor.GOLD + "Done. Now just type '" + ChatColor.GREEN + "/wr tp " + newWorld + ChatColor.GOLD + "' and use this world to continue building.");
-        }
+        final String tpCommand = hasMultiverse() ? "/mvtp" : "/wr tp";
+        sendMessage(player, ChatColor.GOLD + "Done. Now just type '" + ChatColor.GREEN + tpCommand + " " + newWorld + ChatColor.GOLD + "' and use this world to continue building.");
       } else {
-        sendMessage(player, ChatColor.DARK_RED + "The world '" + world + " does not exist.");
+        sendMessage(player, ChatColor.DARK_RED + "Copying world '" + world + " failed. Does it even exist?");
         delete(newWorld);
       }
     });
     return true;
+  }
+
+  private static String getWorldWithAnyMe(final Player player, final String world) {
+    if ("me".equals(world) && player != null) {
+      return player.getWorld().getName();
+    }
+    return world;
   }
 
   private static String getWorldFromListBackupsArgs(final Player player, final String[] args) {
@@ -110,12 +112,7 @@ public class Commands implements CommandExecutor {
       return player.getWorld().getName();
     }
 
-    final String world = args[1];
-    if (world.equals("me") && player != null) {
-      return player.getWorld().getName();
-    }
-
-    return world;
+    return getWorldWithAnyMe(player, args[1]);
   }
 
   public boolean listBackups(final Player player, final String[] args) {
@@ -162,7 +159,7 @@ public class Commands implements CommandExecutor {
 
   public boolean saveRebuild(final Player player, final String[] args) {
     if ((args.length > 0 && player != null) || (player == null && args.length > 1)) {
-      Bukkit.getScheduler().runTask(this.plugin, () -> {
+      Bukkit.getScheduler().runTask(plugin, () -> {
         String world;
         String arg;
         String backup;
@@ -223,18 +220,18 @@ public class Commands implements CommandExecutor {
           } else {
             isSuccess = Io.copy(Paths.get(backup), Paths.get(world));
           }
-          Bukkit.getScheduler().runTask(Commands.this.plugin, () -> {
+          Bukkit.getScheduler().runTask(plugin, () -> {
             load(world);
             boolean loaded = false;
             while (!loaded) {
               loaded = Bukkit.getServer().getWorlds().contains(Bukkit.getWorld(world));
               if (loaded) {
-                Bukkit.getScheduler().runTaskLater(Commands.this.plugin, () ->
+                Bukkit.getScheduler().runTaskLater(plugin, () ->
                   IntStream
                     .range(0, playerInWorld.length)
                     .filter(i12 -> playerInWorld[i12] != null)
                     .forEach(i12 -> teleport(playerInWorld[i12], playerInWorldLoc[i12])), 10L);
-                Bukkit.getScheduler().runTaskLater(Commands.this.plugin, () ->
+                Bukkit.getScheduler().runTaskLater(plugin, () ->
                   IntStream
                     .range(0, playerInWorld.length)
                     .filter(i1 -> playerInWorld[i1] != null)
