@@ -4,17 +4,15 @@
 
 package de.tobynextdoor.worldrebuild.io;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.file.PathUtils;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
+
+import static java.nio.file.Files.exists;
 
 public class Io {
   public String[] list(final String[] worlds, final String sourceWorldId) {
@@ -45,74 +43,39 @@ public class Io {
     return worlds;
   }
 
-  public boolean delete(final String src) {
-    final File srcFolder = new File(src);
-    if (!srcFolder.exists()) {
-      System.out.println("[WorldRebuild] Directory does not exist.");
+  public static boolean delete(final Path path) {
+    if (!exists(path)) {
+      System.err.println("[WorldRebuild] Directory '" + path + "' does not exist.");
       return false;
     }
+
     try {
-      delFolder(srcFolder);
-      System.out.println("[WorldRebuild] Deleting finished.");
+      PathUtils.deleteDirectory(path);
+      System.out.println("[WorldRebuild] Deleting finished for '" + path + "'.");
       return true;
     } catch (IOException ex) {
       ex.printStackTrace();
-      System.out.println("[WorldRebuild] Deleting failed.");
+      System.err.println("[WorldRebuild] Deleting failed for '" + path + "'.");
       return false;
     }
   }
 
-  public static void delFolder(final File fileOrDirectory) throws IOException {
-    Files.walkFileTree(fileOrDirectory.toPath(), new SimpleFileVisitor<Path>(){
-      @Override
-      public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
-        final FileVisitResult superResult = super.visitFile(file, attrs);
-        if (superResult == FileVisitResult.CONTINUE) {
-          Files.deleteIfExists(file);
-        }
-        return superResult;
-      }
-    });
-  }
-
-  public boolean copy(final String source, final String dest) {
-    final File sourceFolder = new File(source);
-    final File destFolder = new File(dest);
-    if (!sourceFolder.exists()) {
+  public static boolean copy(final Path source, final Path dest) {
+    if (!Files.exists(source)) {
+      System.err.println("[WorldRebuild] Can't copy  non-existing '" + source + "', to '" + dest + "'.");
       return false;
     }
+
+    System.out.println("[WorldRebuild] Copying '" + source + "' to '" + dest + "' started.");
     try {
-      System.out.println("[WorldRebuild] Starting to copy '" + source + "' to '" + dest + "'.");
-      copyFolder(sourceFolder, destFolder);
+      FileUtils.copyDirectory(source.toFile(), dest.toFile());
+      System.out.println("[WorldRebuild] Copying '" + source + "' to '" + dest + "' finished.");
+      return true;
     } catch (IOException ex) {
+      ex.printStackTrace();
+      System.err.println("[WorldRebuild] Copying '" + source + "' to '" + dest + "' failed.");
+      return false;
     }
-    System.out.println("[WorldRebuild] Copying finished.");
-    return true;
   }
 
-  public static void copyFolder(final File source, final File dest) throws IOException {
-    if (source.isDirectory()) {
-      if (!dest.exists()) {
-        dest.mkdir();
-      }
-      final String[] files = source.list();
-      if (files.length > 0) {
-        for (final String file : files) {
-          final File sourceFile = new File(source, file);
-          final File destFile = new File(dest, file);
-          copyFolder(sourceFile, destFile);
-        }
-      }
-    } else {
-      final InputStream in = new FileInputStream(source);
-      final OutputStream out = new FileOutputStream(dest);
-      final byte[] buffer = new byte[1024];
-      int length;
-      while ((length = in.read(buffer)) > 0) {
-        out.write(buffer, 0, length);
-      }
-      in.close();
-      out.close();
-    }
-  }
 }

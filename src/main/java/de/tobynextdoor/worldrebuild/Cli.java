@@ -32,6 +32,7 @@ public class Cli {
 
   /**
    * Returns the version if available, or {@link Optional#empty()} if not.
+   *
    * @param yml Name of an {@code .yml} file on the classpath.
    * @return Whatever is after the {@code ":"} on the first line starting with {@code "version:"}.
    * @throws IOException In case underlying {@code java.io} code throws.

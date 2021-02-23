@@ -19,7 +19,7 @@ public class ResourceIo {
    * {@code true}.
    *
    * @param classPathResource Name used in call to {@link ClassLoader#getSystemResourceAsStream(String)}.
-   * @param stopAfter Which line should be the last one returned.
+   * @param stopAfter         Which line should be the last one returned.
    * @return A {@link Stream} of {@code String}s, one for each line.
    * @throws IOException In case underlying {@code java.io} code throws.
    */
