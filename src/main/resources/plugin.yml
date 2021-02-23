@@ -1,6 +1,6 @@
 name: WorldRebuild
-version: 1.2.4
-description: Backup/Restore your world.
+version: ${project.version}
+description: ${project.description}
 author: tobynextdoor
 
 main: de.tobynextdoor.WorldRebuild.WorldRebuild
@@ -8,7 +8,7 @@ main: de.tobynextdoor.WorldRebuild.WorldRebuild
 commands:
     worldrebuild:
       description: Manage your backups.
-      usage: </worldrebuild> <command>
+      usage: /worldrebuild <command>
     wr:
       description: Manage your backups.
-      usage: </wr> <command>
+      usage: /wr <command>

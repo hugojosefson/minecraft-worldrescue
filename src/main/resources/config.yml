@@ -1,5 +1,5 @@
 Autosave:
-  #to enable autosave change to true and reload your server
+  # to enable autosave change to true and reload your server
   Enabled: false
-  #autosave frequency in minutes
+  # autosave frequency in minutes
   Frequency (in min): 5
