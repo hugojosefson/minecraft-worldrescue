@@ -48,24 +48,20 @@ public class Io {
     }
     try {
       delFolder(srcFolder);
+      System.out.println("[WorldRebuild] Deleting finished.");
+      return true;
     } catch (IOException ex) {
+      ex.printStackTrace();
+      System.out.println("[WorldRebuild] Deleting failed.");
+      return false;
     }
-    System.out.println("[WorldRebuild] Deleting finished.");
-    return true;
   }
 
-  public static void delFolder(final File src) throws IOException {
-    if (src.isDirectory()) {
-      final String[] arr$;
-      final String[] files = arr$ = src.list();
-      for (final String file : arr$) {
-        final File srcFile = new File(src, file);
-        delFolder(srcFile);
-      }
-      src.delete();
-    } else {
-      src.delete();
+  public static void delFolder(final File fileOrDirectory) throws IOException {
+    if (fileOrDirectory.isDirectory()) {
+      for (File file : fileOrDirectory.listFiles()) delFolder(file);
     }
+    fileOrDirectory.delete();
   }
 
   public boolean copy(final String source, final String dest) {
