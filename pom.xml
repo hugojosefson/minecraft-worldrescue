@@ -63,7 +63,6 @@
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.2.0</version>
         <configuration>
-          <finalName>${project.name}</finalName>
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
@@ -71,6 +70,41 @@
             </manifest>
           </archive>
         </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.2.4</version>
+        <configuration>
+          <finalName>${project.name}</finalName>
+          <minimizeJar>true</minimizeJar>
+          <artifactSet>
+            <includes>
+              <include>commons-io:commons-io</include>
+            </includes>
+          </artifactSet>
+          <filters>
+            <filter>
+              <artifact>commons-io:commons-io</artifact>
+              <excludes>
+                <exclude>META-INF/*</exclude>
+              </excludes>
+            </filter>
+          </filters>
+          <relocations>
+            <relocation>
+              <pattern>org.apache.commons.io</pattern>
+              <shadedPattern>de.tobynextdoor.worldrebuild.vendor.org.apache.commons.io</shadedPattern>
+            </relocation>
+          </relocations>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
