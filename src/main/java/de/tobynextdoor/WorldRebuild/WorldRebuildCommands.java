@@ -343,7 +343,7 @@ class SubCommandHandler {
       return action.apply(player, args);
     }
 
-    WorldRebuildCommands.sendMessage(player, ChatColor.DARK_RED + "You don't have the permissions to perform this action!");
+    WorldRebuildCommands.sendMessage(player, ChatColor.DARK_RED + "You lack permission " + requiredPermission + ", which is required for this action.");
     return true;
   }
 }
