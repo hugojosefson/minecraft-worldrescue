@@ -10,6 +10,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 
 public class Io {
   public String[] list(final String[] worlds, final String sourceWorldId) {
@@ -58,10 +63,16 @@ public class Io {
   }
 
   public static void delFolder(final File fileOrDirectory) throws IOException {
-    if (fileOrDirectory.isDirectory()) {
-      for (File file : fileOrDirectory.listFiles()) delFolder(file);
-    }
-    fileOrDirectory.delete();
+    Files.walkFileTree(fileOrDirectory.toPath(), new SimpleFileVisitor<Path>(){
+      @Override
+      public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
+        final FileVisitResult superResult = super.visitFile(file, attrs);
+        if (superResult == FileVisitResult.CONTINUE) {
+          Files.deleteIfExists(file);
+        }
+        return superResult;
+      }
+    });
   }
 
   public boolean copy(final String source, final String dest) {
