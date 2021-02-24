@@ -1,4 +1,4 @@
-package de.tobynextdoor.worldrebuild.io;
+package com.hugojosefson.mc.worldrescue.io;
 
 import java.io.BufferedReader;
 import java.io.IOException;

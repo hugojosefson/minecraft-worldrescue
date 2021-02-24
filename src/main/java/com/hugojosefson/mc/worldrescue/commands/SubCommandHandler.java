@@ -1,11 +1,11 @@
-package de.tobynextdoor.worldrebuild.commands;
+package com.hugojosefson.mc.worldrescue.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.function.BiFunction;
 
-import static de.tobynextdoor.worldrebuild.commands.Commands.sendMessage;
+import static com.hugojosefson.mc.worldrescue.commands.Commands.sendMessage;
 
 /**
  * Handles one subcommand.
@@ -17,7 +17,7 @@ class SubCommandHandler {
 
   SubCommandHandler(final String subcommand, final BiFunction<Player, String[], Boolean> action) {
     this.handlesSubcommand = subcommand;
-    this.requiredPermission = "worldrebuild." + subcommand;
+    this.requiredPermission = "worldrescue." + subcommand;
     this.action = action;
   }
 

@@ -26,6 +26,6 @@ LABEL maintainer="Hugo Josefson <hugo@josefson.org> (https://www.hugojosefson.co
 RUN mkdir /app
 WORKDIR /app
 
-COPY --from=builder /app/target/WorldRebuild.jar .
+COPY --from=builder /app/target/WorldRescue.jar .
 
-CMD bash -c "java -jar WorldRebuild.jar --version && echo ========== && java -jar WorldRebuild.jar"
+CMD bash -c "java -jar WorldRescue.jar --version && echo ========== && java -jar WorldRescue.jar"

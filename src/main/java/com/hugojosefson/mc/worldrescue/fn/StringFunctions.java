@@ -1,4 +1,4 @@
-package de.tobynextdoor.worldrebuild.fn;
+package com.hugojosefson.mc.worldrescue.fn;
 
 import java.util.function.Predicate;
 

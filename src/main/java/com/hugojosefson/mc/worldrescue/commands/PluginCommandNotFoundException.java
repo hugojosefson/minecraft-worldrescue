@@ -1,4 +1,4 @@
-package de.tobynextdoor.worldrebuild.commands;
+package com.hugojosefson.mc.worldrescue.commands;
 
 public class PluginCommandNotFoundException extends RuntimeException {
   public PluginCommandNotFoundException(String command) {

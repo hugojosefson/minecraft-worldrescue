@@ -1,11 +1,12 @@
-# WorldRebuild
+# WorldRescue
 
-Trying to resurrect the WorldRebuild plugin for Bukkit compatible Minecraft servers.
+Plugin for Bukkit compatible Minecraft servers, to easily backup and restore your worlds.
 
-Apparently, it's GPLv3 licensed according to
-[https://dev.bukkit.org/projects/worldrebuild](https://dev.bukkit.org/projects/worldrebuild)
-([archived 2020-AUG-08](https://web.archive.org/web/20200808063349/https://dev.bukkit.org/projects/worldrebuild)).
-I assume the plugin author created that plugin page, and was the one who selected the license.
+Based on the excellent [WorldRebuild](https://www.curseforge.com/minecraft/bukkit-plugins/worldrebuild) plugin from
+2014, by _tobynextdoor_. I try to keep the same commands in WorldRescue, that were available in WorldRebuild. Even the
+short-command `/wr` is the same, thanks to the similarity of the two plugins' names :)
+
+This WorldRescue plugin works with Minecraft API v1.16.
 
 ## TODO/TODONE
 
@@ -16,10 +17,12 @@ I assume the plugin author created that plugin page, and was the one who selecte
 - [x] `java -jar WorldRebuild.jar` should output the version and some instructions.
 - [x] `java -jar WorldRebuild.jar --version` should output the version.
 - [x] Refactor a little, to acquaint myself with the code.
-- [x] Declare `api-version: 1.16`. Bump plugin version to `2.0.0` because it's a breaking change according to [semver](https://semver.org/).
+- [x] Declare `api-version: 1.16`. Bump plugin version to `2.0.0` because it's a breaking change according
+  to [semver](https://semver.org/).
 - [x] Make IO code more stable.
 - [ ] Upgrade implementations with Java 8 and Apache Commons libs.
 - [x] Make sure it works in an up-to-date Spigot server.
 - [ ] Make sure it works in an up-to-date Bukkit server.
 - [ ] Make sure it works in an up-to-date Paper server.
-- [ ] Attempt to contact the original author *tobynextdoor*, to present my findings.
+- [x] Get OK from the original author *tobynextdoor* of WorldRebuild, to go ahead and use their code as base.
+- [x] Rename as different plugin: WorldRescue.

@@ -2,10 +2,10 @@
 // Decompiled by Procyon v0.5.36
 //
 
-package de.tobynextdoor.worldrebuild.autosave;
+package com.hugojosefson.mc.worldrescue.autosave;
 
-import de.tobynextdoor.worldrebuild.WorldRebuild;
-import de.tobynextdoor.worldrebuild.commands.Commands;
+import com.hugojosefson.mc.worldrescue.WorldRescue;
+import com.hugojosefson.mc.worldrescue.commands.Commands;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
@@ -15,13 +15,13 @@ public class AutosaveRunnable implements Runnable {
   final Commands commands;
 
   public AutosaveRunnable() {
-    final WorldRebuild plugin = (WorldRebuild) Bukkit.getPluginManager().getPlugin("WorldRebuild");
+    final WorldRescue plugin = (WorldRescue) Bukkit.getPluginManager().getPlugin("WorldRescue");
     commands = new Commands(plugin);
   }
 
   @Override
   public void run() {
-    Bukkit.broadcastMessage("§f[§2WorldRebuild§f] §6Starting autosave...");
+    Bukkit.broadcastMessage("§f[§WorldRescue§f] §6Starting autosave...");
 
     final List<World> activeWorlds = Bukkit.getServer().getWorlds();
     activeWorlds.stream()
@@ -29,6 +29,6 @@ public class AutosaveRunnable implements Runnable {
       .map(name -> new String[]{"save", name, "autosave"})
       .forEach(args -> commands.saveRebuild(null, args));
 
-    Bukkit.broadcastMessage("§f[§2WorldRebuild§f] §6Finished autosave.");
+    Bukkit.broadcastMessage("§f[§WorldRescue§f] §6Finished autosave.");
   }
 }

@@ -2,7 +2,7 @@
 // Decompiled by Procyon v0.5.36
 //
 
-package de.tobynextdoor.worldrebuild.io;
+package com.hugojosefson.mc.worldrescue.io;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.file.PathUtils;
@@ -78,35 +78,35 @@ public class Io {
 
   public static boolean delete(final Path path) {
     if (!exists(path)) {
-      System.err.println("[WorldRebuild] Directory '" + path + "' does not exist.");
+      System.err.println("[WorldRescue] Directory '" + path + "' does not exist.");
       return false;
     }
 
     try {
       PathUtils.deleteDirectory(path);
-      System.out.println("[WorldRebuild] Deleting finished for '" + path + "'.");
+      System.out.println("[WorldRescue] Deleting finished for '" + path + "'.");
       return true;
     } catch (IOException ex) {
       ex.printStackTrace();
-      System.err.println("[WorldRebuild] Deleting failed for '" + path + "'.");
+      System.err.println("[WorldRescue] Deleting failed for '" + path + "'.");
       return false;
     }
   }
 
   public static boolean copy(final Path source, final Path dest) {
     if (!Files.exists(source)) {
-      System.err.println("[WorldRebuild] Can't copy  non-existing '" + source + "', to '" + dest + "'.");
+      System.err.println("[WorldRescue] Can't copy  non-existing '" + source + "', to '" + dest + "'.");
       return false;
     }
 
-    System.out.println("[WorldRebuild] Copying '" + source + "' to '" + dest + "' started.");
+    System.out.println("[WorldRescue] Copying '" + source + "' to '" + dest + "' started.");
     try {
       FileUtils.copyDirectory(source.toFile(), dest.toFile());
-      System.out.println("[WorldRebuild] Copying '" + source + "' to '" + dest + "' finished.");
+      System.out.println("[WorldRescue] Copying '" + source + "' to '" + dest + "' finished.");
       return true;
     } catch (IOException ex) {
       ex.printStackTrace();
-      System.err.println("[WorldRebuild] Copying '" + source + "' to '" + dest + "' failed.");
+      System.err.println("[WorldRescue] Copying '" + source + "' to '" + dest + "' failed.");
       return false;
     }
   }

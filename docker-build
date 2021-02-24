@@ -1,1 +1,1 @@
-docker build --tag hugojosefson/minecraft-worldrebuild:latest .
+docker build --tag hugojosefson/minecraft-worldrescue:latest .

@@ -2,26 +2,26 @@
 // Decompiled by Procyon v0.5.36
 //
 
-package de.tobynextdoor.worldrebuild;
+package com.hugojosefson.mc.worldrescue;
 
-import de.tobynextdoor.worldrebuild.autosave.AutosaveRunnable;
-import de.tobynextdoor.worldrebuild.commands.Commands;
-import de.tobynextdoor.worldrebuild.commands.PluginCommandNotFoundException;
+import com.hugojosefson.mc.worldrescue.autosave.AutosaveRunnable;
+import com.hugojosefson.mc.worldrescue.commands.Commands;
+import com.hugojosefson.mc.worldrescue.commands.PluginCommandNotFoundException;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-public class WorldRebuild extends JavaPlugin {
+public class WorldRescue extends JavaPlugin {
   public final Commands commands;
 
-  public WorldRebuild() {
+  public WorldRescue() {
     this.commands = new Commands(this);
   }
 
   public void onEnable() {
-    getPluginCommand("worldrebuild").setExecutor(this.commands);
+    getPluginCommand("worldrescue").setExecutor(this.commands);
     getPluginCommand("wr").setExecutor(this.commands);
 
     final FileConfiguration config = this.getConfig();

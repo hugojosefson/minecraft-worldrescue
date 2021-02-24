@@ -8,9 +8,9 @@ api-version: ${apiVersion}
 main: ${mainClass}
 
 commands:
-    worldrebuild:
-      description: Manage your backups.
-      usage: /worldrebuild <command>
-    wr:
-      description: Manage your backups.
-      usage: /wr <command>
+  worldrescue:
+    description: Manage your backups.
+    usage: /worldrescue <command>
+  wr:
+    description: Manage your backups.
+    usage: /wr <command>

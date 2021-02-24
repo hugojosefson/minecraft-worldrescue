@@ -1,11 +1,11 @@
-package de.tobynextdoor.worldrebuild;
+package com.hugojosefson.mc.worldrescue;
 
 import java.io.IOException;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.tobynextdoor.worldrebuild.fn.StringFunctions.startsWith;
-import static de.tobynextdoor.worldrebuild.io.ResourceIo.getLinesUntil;
+import static com.hugojosefson.mc.worldrescue.fn.StringFunctions.startsWith;
+import static com.hugojosefson.mc.worldrescue.io.ResourceIo.getLinesUntil;
 import static java.util.Arrays.stream;
 import static java.util.function.Predicate.isEqual;
 

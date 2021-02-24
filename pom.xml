@@ -3,46 +3,19 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>de.tobynextdoor</groupId>
-  <artifactId>worldrebuild</artifactId>
+  <groupId>com.hugojosefson.mc</groupId>
+  <artifactId>worldrescue</artifactId>
   <version>2.0.0-SNAPSHOT</version>
-  <name>WorldRebuild</name>
+  <name>WorldRescue</name>
   <description>Backup/Restore your world.</description>
-  <url>https://github.com/hugojosefson/minecraft-worldrebuild</url>
-  <licenses>
-    <license>
-      <name>GNU General Public License v3.0 only</name>
-      <url>https://www.gnu.org/licenses/gpl-3.0.html</url>
-      <distribution>manual</distribution>
-      <comments>License info via
-        https://web.archive.org/web/20200808063349/https://dev.bukkit.org/projects/worldrebuild
-      </comments>
-    </license>
-  </licenses>
+  <url>${project.scm.url}</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <mainClass>de.tobynextdoor.worldrebuild.WorldRebuild</mainClass>
+    <javaPackage>com.hugojosefson.mc.worldrescue</javaPackage>
+    <mainClass>${javaPackage}.WorldRescue</mainClass>
     <apiVersion>1.16</apiVersion>
-    <author>tobynextdoor</author>
+    <author>hugojosefson</author>
   </properties>
-  <developers>
-    <developer>
-      <id>tobynextdoor</id>
-      <email>tobynextdoor@gmail.com</email>
-      <roles>
-        <role>founder</role>
-        <role>developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>hugojosefson</id>
-      <email>hugo@josefson.org</email>
-      <url>https://www.hugojosefson.com/</url>
-      <roles>
-        <role>developer</role>
-      </roles>
-    </developer>
-  </developers>
   <build>
     <resources>
       <resource>
@@ -68,7 +41,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>de.tobynextdoor.worldrebuild.Cli</mainClass>
+              <mainClass>com.hugojosefson.mc.worldrescue.Cli</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -95,7 +68,7 @@
           <relocations>
             <relocation>
               <pattern>org.apache.commons.io</pattern>
-              <shadedPattern>de.tobynextdoor.worldrebuild.vendor.org.apache.commons.io</shadedPattern>
+              <shadedPattern>${javaPackage}.vendor.org.apache.commons.io</shadedPattern>
             </relocation>
           </relocations>
         </configuration>
@@ -110,19 +83,45 @@
       </plugin>
     </plugins>
   </build>
+  <developers>
+    <developer>
+      <id>hugojosefson</id>
+      <email>hugo@josefson.org</email>
+      <url>https://www.hugojosefson.com/</url>
+      <roles>
+        <role>developer</role>
+        <role>maintainer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>tobynextdoor</id>
+      <email>tobynextdoor@gmail.com</email>
+      <url>https://www.curseforge.com/minecraft/bukkit-plugins/worldrebuild</url>
+      <roles>
+        <role>upstream-developer</role>
+      </roles>
+    </developer>
+  </developers>
+  <licenses>
+    <license>
+      <name>GNU General Public License v3.0 only</name>
+      <url>https://www.gnu.org/licenses/gpl-3.0.html</url>
+      <distribution>manual</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <url>https://github.com/hugojosefson/minecraft-worldrescue</url>
+    <connection>scm:git:${project.scm.url}</connection>
+    <developerConnection>
+      scm:git:[fetch=]${project.scm.url}[push=]${project.scm.connection}
+    </developerConnection>
+  </scm>
   <repositories>
     <repository>
       <id>papermc</id>
       <url>https://papermc.io/repo/repository/maven-public/</url>
     </repository>
   </repositories>
-  <scm>
-    <url>https://github.com/hugojosefson/minecraft-worldrebuild</url>
-    <connection>scm:git:https://github.com/hugojosefson/minecraft-worldrebuild</connection>
-    <developerConnection>
-      scm:git:[fetch=]https://github.com/hugojosefson/minecraft-worldrebuild[push=]scm:git:https://github.com/hugojosefson/minecraft-worldrebuild
-    </developerConnection>
-  </scm>
   <dependencies>
     <dependency>
       <groupId>org.bukkit</groupId>

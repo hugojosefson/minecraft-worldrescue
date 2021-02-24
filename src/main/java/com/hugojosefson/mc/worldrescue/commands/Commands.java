@@ -2,10 +2,10 @@
 // Decompiled by Procyon v0.5.36
 //
 
-package de.tobynextdoor.worldrebuild.commands;
+package com.hugojosefson.mc.worldrescue.commands;
 
-import de.tobynextdoor.worldrebuild.WorldRebuild;
-import de.tobynextdoor.worldrebuild.io.Io;
+import com.hugojosefson.mc.worldrescue.io.Io;
+import com.hugojosefson.mc.worldrescue.WorldRescue;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -25,7 +25,7 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class Commands implements CommandExecutor {
-  public final WorldRebuild plugin;
+  public final WorldRescue plugin;
 
   private final SubCommandHandler[] subCommandHandlers = new SubCommandHandler[]{
     new SubCommandHandler("save", this::saveRebuild),
@@ -36,7 +36,7 @@ public class Commands implements CommandExecutor {
     new SubCommandHandler("tp", this::tp)
   };
 
-  public Commands(final WorldRebuild plugin) {
+  public Commands(final WorldRescue plugin) {
     this.plugin = plugin;
   }
 
@@ -147,7 +147,7 @@ public class Commands implements CommandExecutor {
   private static boolean help(final Player player) {
     sendMessage(player, " ");
     sendMessage(player, ChatColor.GOLD + "<needed> [optional]");
-    sendMessage(player, ChatColor.GOLD + "'" + ChatColor.GREEN + "/wr help" + ChatColor.GOLD + "' --> Lists all commands of WorldRebuild.");
+    sendMessage(player, ChatColor.GOLD + "'" + ChatColor.GREEN + "/wr help" + ChatColor.GOLD + "' --> Lists all commands of WorldRescue.");
     sendMessage(player, ChatColor.GOLD + "'" + ChatColor.GREEN + "/wr list [world]" + ChatColor.GOLD + "' --> Lists all backups of a world.");
     sendMessage(player, ChatColor.GOLD + "'" + ChatColor.GREEN + "/wr save [world] [index]" + ChatColor.GOLD + "' --> Saves your chosen world.");
     sendMessage(player, ChatColor.GOLD + "'" + ChatColor.GREEN + "/wr rebuild [world] [index]" + ChatColor.GOLD + "' --> Rebuilds your chosen world.");
@@ -197,9 +197,9 @@ public class Commands implements CommandExecutor {
           isDefault = true;
         }
         if (isDefault) {
-          Commands.sendMessage(player, ChatColor.RED + "The world '" + world + "' is your default world and due to a Bukkit restrictment WorldRebuild can not create/restore a backup.");
-          Commands.sendMessage(player, ChatColor.RED + "To solve this problem, type '" + ChatColor.GREEN + "/wr duplicate <world name>" + ChatColor.RED + "'.");
-          Commands.sendMessage(player, ChatColor.RED + "This will create the new world '" + world + "-new' which will be the same as the world '" + world + "' and WorldRebuild will be abled to create/restore backups from this world.");
+          Commands.sendMessage(player, ChatColor.RED + "The world '" + world + "' is your default world. Due to a restriction with Bukkit, WorldRescue can not create/restore a backup.");
+          Commands.sendMessage(player, ChatColor.RED + "To solve this problem, type '" + ChatColor.GREEN + "/wr duplicate " + world + ChatColor.RED + "'.");
+          Commands.sendMessage(player, ChatColor.RED + "This will create the new world '" + world + "-new' which will be the same as the world '" + world + "' and WorldRescue will be able to create/restore backups from '"+world+"-new'.");
           Commands.sendMessage(player, ChatColor.RED + "You can also open your server.config and change the point 'level-name' to another world.");
         } else {
           load(Bukkit.getServer().getWorlds().get(0).getName());
@@ -318,7 +318,7 @@ public class Commands implements CommandExecutor {
 
   public static void sendMessage(final Player receiver, final String message) {
     if (receiver == null) {
-      System.out.println("[WorldRebuild] " + message);
+      System.out.println("[WorldRescue] " + message);
       return;
     }
     receiver.sendMessage(message);
