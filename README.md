@@ -4,11 +4,13 @@
 
 Plugin for Bukkit compatible Minecraft servers, to easily backup and restore your worlds.
 
+This plugin now works with Minecraft API v1.16.
+
+## Credit
+
 Based on the excellent [WorldRebuild](https://www.curseforge.com/minecraft/bukkit-plugins/worldrebuild) plugin from
 2014, by _tobynextdoor_. I try to keep the same commands in WorldRescue, that were available in WorldRebuild. Even the
 short-command `/wr` is the same, thanks to the similarity of the two plugins' names :)
-
-This WorldRescue plugin works with Minecraft API v1.16.
 
 ## TODO/TODONE
 
