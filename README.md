@@ -1,5 +1,7 @@
 # WorldRescue
 
+<img alt="WorldRescue logo" src="https://cdn.jsdelivr.net/gh/hugojosefson/minecraft-worldrescue/logo/vector/default.svg" height="100" align="right">
+
 Plugin for Bukkit compatible Minecraft servers, to easily backup and restore your worlds.
 
 Based on the excellent [WorldRebuild](https://www.curseforge.com/minecraft/bukkit-plugins/worldrebuild) plugin from
