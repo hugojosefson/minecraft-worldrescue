@@ -7,30 +7,67 @@ package de.tobynextdoor.worldrebuild.io;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.file.PathUtils;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.nio.file.Files.exists;
+import static java.nio.file.Files.newDirectoryStream;
+import static java.util.stream.StreamSupport.stream;
+import static org.apache.commons.lang.StringUtils.removeEnd;
 
 public class Io {
 
   public static final String HASH_BACKUP = "#backup";
+  private static final Pattern WORLD_AND_INDEX = Pattern.compile("^(.*)_([^_]+)$");
+
+  private static class WorldAndIndex {
+    final String world;
+    final String index;
+
+    private WorldAndIndex(String world, String index) {
+      this.world = world;
+      this.index = index;
+    }
+  }
+
+  private static WorldAndIndex getNameAndIndex(final String directoryName){
+    final Matcher matcher = WORLD_AND_INDEX.matcher(directoryName);
+    if (!matcher.find()) throw new IllegalArgumentException("directoryName '" + directoryName + "' unexpectedly did not match " + WORLD_AND_INDEX);
+    return new WorldAndIndex(matcher.group(1), matcher.group(2));
+  }
 
   public static Optional<String[]> listBackups(final Path world) {
-    final Path worldDir = world.toAbsolutePath();
+    final Path worldDir;
+    try {
+      worldDir = world.toRealPath().toAbsolutePath();
+    } catch (NoSuchFileException | FileNotFoundException e) {
+      return Optional.empty();
+    } catch (IOException e) {
+      e.printStackTrace();
+      return Optional.empty();
+    }
     if (!Files.exists(worldDir)) {
       return Optional.empty();
     }
-    try {
-      final String[] backupIndices = Files.list(worldDir)
-        .filter(path -> path.toFile().isDirectory())
-        .filter(path -> path.toFile().getAbsolutePath().endsWith(HASH_BACKUP))
+    final Path baseDir = worldDir.getParent();
+    try (final DirectoryStream<Path> directoryStream = newDirectoryStream(baseDir)) {
+      final String[] backupIndices = stream(directoryStream.spliterator(), false)
+        .filter(Files::isDirectory)
         .map(Path::getFileName)
         .map(Path::toString)
-        .map(s -> s.replace(world + "_", ""))
-        .map(s -> s.replace(HASH_BACKUP, ""))
+        .filter(directoryName -> directoryName.endsWith(HASH_BACKUP))
+        .map(s -> removeEnd(s, HASH_BACKUP))
+        .filter(WORLD_AND_INDEX.asPredicate())
+        .map(Io::getNameAndIndex)
+        .filter(nameAndIndex -> nameAndIndex.world.equals(world.getFileName().toString()))
+        .map(nameAndIndex -> nameAndIndex.index)
         .toArray(String[]::new);
       return Optional.of(backupIndices);
     } catch (IOException e) {
