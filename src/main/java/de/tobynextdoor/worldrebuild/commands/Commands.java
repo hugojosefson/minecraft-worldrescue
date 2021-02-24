@@ -10,6 +10,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -111,7 +113,6 @@ public class Commands implements CommandExecutor {
     if (args.length == 1) {
       return player.getWorld().getName();
     }
-
     return getWorldWithAnyMe(player, args[1]);
   }
 
@@ -261,8 +262,11 @@ public class Commands implements CommandExecutor {
   }
 
   public boolean tp(final Player player, final String[] args) {
-    Bukkit.getServer().createWorld(new WorldCreator(args[1]));
-    teleport(player, Bukkit.getServer().getWorld(args[1]).getSpawnLocation());
+    final String worldName = args[1];
+    final Server server = Bukkit.getServer();
+    final World world = server.createWorld(new WorldCreator(worldName));
+    assert world != null;
+    teleport(player, world.getSpawnLocation());
     return true;
   }
 
@@ -291,7 +295,7 @@ public class Commands implements CommandExecutor {
   }
 
   void teleport(final Player player, final Location location) {
-    if (hasMultiverse()) {
+    if (hasMultiverse() && location.getWorld() != null) {
       Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mvtp " + player.getName() + " e:" + location.getWorld().getName() + ":" + location.getX() + "," + location.getY() + "," + location.getZ());
     } else {
       player.teleport(location);
