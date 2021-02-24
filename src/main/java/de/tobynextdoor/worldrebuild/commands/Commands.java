@@ -59,14 +59,14 @@ public class Commands implements CommandExecutor {
 
   public boolean delete(final Player player, final String[] args) {
     if (args.length == 3) {
-      if (args[1].equals("me") && player != null) {
-        args[1] = player.getWorld().getName();
-      }
-      final String world = args[1] + "_" + args[2] + "#backup";
-      if (Io.delete(Paths.get(world))) {
-        Bukkit.getServer().broadcastMessage(player.getDisplayName() + ChatColor.GREEN + " deleted the backup '" + args[1] + "' (" + args[2] + ").");
+      final String world = getWorldWithAnyMe(player, args[1]);
+      final String backupIndex = args[2];
+
+      if (Io.delete(Paths.get(world + "_" + backupIndex + "#backup"))) {
+        final String playerDisplayName = player == null ? "Admin on the server console" : player.getDisplayName();
+        Bukkit.getServer().broadcastMessage(playerDisplayName + ChatColor.GREEN + " deleted the backup '" + world + "' (" + backupIndex + ").");
       } else {
-        sendMessage(player, ChatColor.DARK_RED + "The backup '" + args[1] + "' (" + args[2] + ") does not exist.");
+        sendMessage(player, ChatColor.DARK_RED + "The backup '" + world + "' (" + backupIndex + ") does not exist.");
       }
     } else {
       help(player);
