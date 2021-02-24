@@ -1,10 +1,11 @@
-name: WorldRebuild
+name: ${project.name}
 version: ${project.version}
 description: ${project.description}
-author: tobynextdoor
-website: https://github.com/hugojosefson/minecraft-worldrebuild
+author: ${author}
+website: ${project.url}
 
-main: de.tobynextdoor.WorldRebuild.WorldRebuild
+api-version: ${apiVersion}
+main: ${mainClass}
 
 commands:
     worldrebuild:

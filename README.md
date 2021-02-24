@@ -16,6 +16,7 @@ I assume the plugin author created that plugin page, and was the one who selecte
 - [x] `java -jar WorldRebuild.jar` should output the version and some instructions.
 - [x] `java -jar WorldRebuild.jar --version` should output the version.
 - [x] Refactor a little, to acquaint myself with the code.
+- [x] Declare `api-version: 1.16`. Bump plugin version to `2.0.0` because it's a breaking change according to [semver](https://semver.org/).
 - [ ] Upgrade implementations with Java 8 and Apache Commons libs.
 - [ ] Make sure it works in an up-to-date Bukkit, Spigot and Paper server.
 - [ ] Attempt to contact the original author *tobynextdoor*, to present my findings.
