@@ -15,7 +15,7 @@
     <mainClass>${javaPackage}.WorldRescue</mainClass>
     <apiVersion>1.16</apiVersion>
     <author>hugojosefson</author>
-    <internal.repo.dir>${project.build.directory}/mvn-repo</internal.repo.dir>
+    <internal.repo.dir>${project.basedir}/../${github.repo}-mvn-repo</internal.repo.dir>
     <github.global.server>github</github.global.server>
     <github.user>hugojosefson</github.user>
     <github.repo>minecraft-worldrescue</github.repo>
