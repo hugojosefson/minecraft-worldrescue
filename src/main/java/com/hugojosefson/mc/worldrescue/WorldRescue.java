@@ -33,7 +33,7 @@ public class WorldRescue extends JavaPlugin {
     config.options().copyDefaults(true);
     this.saveConfig();
 
-    System.out.println("[" + this.getDescription().getName() + "] " + this.getDescription().getVersion() + " (by tobynextdoor) enabled.");
+    System.out.println("[" + this.getDescription().getName() + "] " + this.getDescription().getVersion() + " (by hugojosefson) enabled.");
   }
 
   private void scheduleAutosave(final FileConfiguration config) {
@@ -55,6 +55,6 @@ public class WorldRescue extends JavaPlugin {
   }
 
   public void onDisable() {
-    System.out.println("[" + this.getDescription().getName() + "] " + this.getDescription().getVersion() + " (by tobynextdoor) disabled.");
+    System.out.println("[" + this.getDescription().getName() + "] " + this.getDescription().getVersion() + " (by hugojosefson) disabled.");
   }
 }
