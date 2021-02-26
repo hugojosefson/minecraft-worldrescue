@@ -84,6 +84,7 @@
         <configuration>
           <finalName>${project.name}</finalName>
           <minimizeJar>true</minimizeJar>
+          <shadedArtifactAttached>true</shadedArtifactAttached>
           <artifactSet>
             <includes>
               <include>commons-io:commons-io</include>
