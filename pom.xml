@@ -237,8 +237,8 @@
       <url>https://papermc.io/repo/repository/maven-public/</url>
     </repository>
     <repository>
-      <id>worldrescue-github</id>
-      <url>https://hugojosefson.github.io/minecraft-worldrescue/</url>
+      <id>local-maven-repo</id>
+      <url>file://${project.basedir}/local-maven-repo</url>
     </repository>
   </repositories>
   <dependencies>
