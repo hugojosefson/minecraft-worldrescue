@@ -30,3 +30,4 @@ short-command `/wr` is the same, thanks to the similarity of the two plugins' na
 - [ ] Make sure it works in an up-to-date Paper server.
 - [x] Get OK from the original author *tobynextdoor* of WorldRebuild, to go ahead and use their code as base.
 - [x] Rename as different plugin: WorldRescue.
+- [x] Make a first release.
