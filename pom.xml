@@ -179,15 +179,14 @@
         <artifactId>site-maven-plugin</artifactId>
         <version>0.12</version>
         <configuration>
-          <message>Maven artifacts for ${project.version}</message> <!-- git commit message -->
-          <noJekyll>false</noJekyll>  <!-- disable webpage processing -->
-          <outputDirectory>${internal.repo.dir}</outputDirectory> <!-- matches distribution management repository url above -->
-          <branch>refs/heads/mvn-repo</branch> <!-- remote branch name -->
+          <message>Maven artifacts for ${project.version}</message>
+          <outputDirectory>${internal.repo.dir}</outputDirectory>
+          <branch>refs/heads/mvn-repo</branch>
           <includes><include>**/*</include></includes>
-          <repositoryOwner>${github.user}</repositoryOwner> <!-- organization or user name  -->
-          <repositoryName>${github.repo}</repositoryName> <!-- github repo name -->
+          <repositoryOwner>${github.user}</repositoryOwner>
+          <repositoryName>${github.repo}</repositoryName>
         </configuration>
-        <executions> <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
+        <executions>
           <execution>
             <goals>
               <goal>site</goal>
@@ -260,7 +259,7 @@
     <repository>
       <id>internal.repo</id>
       <name>Temporary Staging Repository</name>
-      <url>file://$${internal.repo.dir}</url>
+      <url>file://${internal.repo.dir}</url>
     </repository>
   </distributionManagement>
 </project>
