@@ -228,7 +228,7 @@
     <url>https://github.com/${github.user}/${github.repo}</url>
     <connection>scm:git:${project.scm.url}</connection>
     <developerConnection>
-      scm:git:[fetch=]${project.scm.url}[push=]${project.scm.connection}
+      scm:git:[fetch=]${project.scm.url}[push=]ssh://git@github.com/${github.user}/${github.repo}
     </developerConnection>
   </scm>
   <repositories>
