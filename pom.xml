@@ -236,12 +236,16 @@
       <id>papermc</id>
       <url>https://papermc.io/repo/repository/maven-public/</url>
     </repository>
+    <repository>
+      <id>worldrescue-github</id>
+      <url>https://hugojosefson.github.io/minecraft-worldrescue/</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.15.2-R0.1-20200624.001047-124</version>
+      <version>1.15.2-R0.1</version>
     </dependency>
     <dependency>
       <groupId>org.jetbrains</groupId>
