@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.hugojosefson.mc</groupId>
+  <groupId>com.hugojosefson.mc.worldrescue</groupId>
   <artifactId>worldrescue</artifactId>
   <version>2.0.0-SNAPSHOT</version>
   <name>WorldRescue</name>
@@ -11,10 +11,14 @@
   <url>${project.scm.url}</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <javaPackage>com.hugojosefson.mc.worldrescue</javaPackage>
+    <javaPackage>${project.groupId}</javaPackage>
     <mainClass>${javaPackage}.WorldRescue</mainClass>
     <apiVersion>1.16</apiVersion>
     <author>hugojosefson</author>
+    <internal.repo.dir>${project.build.directory}/mvn-repo</internal.repo.dir>
+    <github.global.server>github</github.global.server>
+    <github.user>hugojosefson</github.user>
+    <github.repo>minecraft-worldrescue</github.repo>
   </properties>
   <build>
     <resources>
@@ -41,7 +45,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>com.hugojosefson.mc.worldrescue.Cli</mainClass>
+              <mainClass>${javaPackage}.Cli</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -81,6 +85,87 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.5.3</version>
+        <configuration>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <useReleaseProfile>false</useReleaseProfile>
+          <releaseProfiles>release</releaseProfiles>
+          <goals>deploy</goals>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.2.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9.1</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.8.2</version>
+        <configuration>
+          <altDeploymentRepository>internal.repo::default::file://${internal.repo.dir}</altDeploymentRepository>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.github.github</groupId>
+        <artifactId>site-maven-plugin</artifactId>
+        <version>0.11</version>
+        <configuration>
+          <message>Maven artifacts for ${project.version}</message> <!-- git commit message -->
+          <noJekyll>true</noJekyll>  <!-- disable webpage processing -->
+          <outputDirectory>${internal.repo.dir}</outputDirectory> <!-- matches distribution management repository url above -->
+          <branch>refs/heads/mvn-repo</branch> <!-- remote branch name -->
+          <includes><include>**/*</include></includes>
+          <repositoryOwner>${github.user}</repositoryOwner> <!-- organization or user name  -->
+          <repositoryName>${github.repo}</repositoryName> <!-- github repo name -->
+        </configuration>
+        <executions> <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
+          <execution>
+            <goals>
+              <goal>site</goal>
+            </goals>
+            <phase>deploy</phase>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
   <developers>
@@ -110,7 +195,7 @@
     </license>
   </licenses>
   <scm>
-    <url>https://github.com/hugojosefson/minecraft-worldrescue</url>
+    <url>https://github.com/${github.user}/${github.repo}</url>
     <connection>scm:git:${project.scm.url}</connection>
     <developerConnection>
       scm:git:[fetch=]${project.scm.url}[push=]${project.scm.connection}
@@ -140,4 +225,11 @@
       <version>2.8.0</version>
     </dependency>
   </dependencies>
+  <distributionManagement>
+    <repository>
+      <id>internal.repo</id>
+      <name>Temporary Staging Repository</name>
+      <url>file://$${internal.repo.dir}</url>
+    </repository>
+  </distributionManagement>
 </project>
