@@ -30,10 +30,10 @@ public class Commands implements CommandExecutor {
   private final SubCommandHandler[] subCommandHandlers = new SubCommandHandler[]{
     new SubCommandHandler("save", this::saveRebuild),
     new SubCommandHandler("rebuild", this::saveRebuild),
-    new SubCommandHandler("delete", this::delete),
-    new SubCommandHandler("list", this::listBackups),
+    new SubCommandHandler("delete", Commands::delete),
+    new SubCommandHandler("list", Commands::listBackups),
     new SubCommandHandler("duplicate", this::duplicate),
-    new SubCommandHandler("tp", this::tp)
+    new SubCommandHandler("tp", Commands::tp)
   };
 
   public Commands(final WorldRescue plugin) {
@@ -59,7 +59,7 @@ public class Commands implements CommandExecutor {
       .orElseGet(() -> help(player));
   }
 
-  public boolean delete(final Player player, final String[] args) {
+  public static boolean delete(final Player player, final String[] args) {
     if (args.length == 3) {
       final String world = getWorldWithAnyMe(player, args[1]);
       final String backupIndex = args[2];
@@ -116,7 +116,7 @@ public class Commands implements CommandExecutor {
     return getWorldWithAnyMe(player, args[1]);
   }
 
-  public boolean listBackups(final Player player, final String[] args) {
+  public static boolean listBackups(final Player player, final String[] args) {
     if ((args.length <= 0 || player == null) && (player != null || args.length <= 1)) {
       help(player);
       return true;
@@ -261,7 +261,7 @@ public class Commands implements CommandExecutor {
     return true;
   }
 
-  public boolean tp(final Player player, final String[] args) {
+  public static boolean tp(final Player player, final String[] args) {
     final String worldName = args[1];
     final Server server = Bukkit.getServer();
     final World world = server.createWorld(new WorldCreator(worldName));
@@ -278,7 +278,7 @@ public class Commands implements CommandExecutor {
     }
   }
 
-  void load(final String world) {
+  static void load(final String world) {
     if (hasMultiverse()) {
       Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mv load " + world);
     } else {
@@ -286,7 +286,7 @@ public class Commands implements CommandExecutor {
     }
   }
 
-  void unload(final String world, final boolean saveChunksBeforeUnloading) {
+  static void unload(final String world, final boolean saveChunksBeforeUnloading) {
     if (hasMultiverse()) {
       Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mv unload " + world);
     } else {
@@ -294,7 +294,7 @@ public class Commands implements CommandExecutor {
     }
   }
 
-  void teleport(final Player player, final Location location) {
+  static void teleport(final Player player, final Location location) {
     if (hasMultiverse() && location.getWorld() != null) {
       Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mvtp " + player.getName() + " e:" + location.getWorld().getName() + ":" + location.getX() + "," + location.getY() + "," + location.getZ());
     } else {
@@ -302,7 +302,7 @@ public class Commands implements CommandExecutor {
     }
   }
 
-  void delete(final String world) {
+  static void delete(final String world) {
     if (hasMultiverse()) {
       Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mv load " + world);
       Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mv delete " + world);
