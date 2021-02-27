@@ -6,6 +6,7 @@ package com.hugojosefson.mc.worldrescue.commands;
 
 import com.hugojosefson.mc.worldrescue.io.Io;
 import com.hugojosefson.mc.worldrescue.WorldRescue;
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -19,6 +20,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Optional;
@@ -28,6 +31,7 @@ public class Commands implements CommandExecutor {
   public final WorldRescue plugin;
 
   private final SubCommandHandler[] subCommandHandlers = new SubCommandHandler[]{
+    new SubCommandHandler("free", Commands::free),
     new SubCommandHandler("save", this::saveRebuild),
     new SubCommandHandler("rebuild", this::saveRebuild),
     new SubCommandHandler("delete", Commands::delete),
@@ -57,6 +61,11 @@ public class Commands implements CommandExecutor {
       .findFirst()
       .map(handler -> handler.handle(player, args))
       .orElseGet(() -> help(player));
+  }
+
+  public static boolean free(final Player player, final String[] args) {
+    sendMessage(player, "There is "+ Io.getFreeSpace() / 1024 / 1024 +" MB of free space left.");
+    return true;
   }
 
   public static boolean delete(final Player player, final String[] args) {
@@ -154,6 +163,7 @@ public class Commands implements CommandExecutor {
     sendMessage(player, ChatColor.GOLD + "'" + ChatColor.GREEN + "/wr delete <world> <index>" + ChatColor.GOLD + "' --> Deletes the chosen backup.");
     sendMessage(player, ChatColor.GOLD + "'" + ChatColor.GREEN + "/wr duplicate <world>" + ChatColor.GOLD + "' --> Duplicate the chosen world.");
     sendMessage(player, ChatColor.GOLD + "'" + ChatColor.GREEN + "/wr tp <world>" + ChatColor.GOLD + "' --> Teleport to a world.");
+    sendMessage(player, ChatColor.GOLD + "'" + ChatColor.GREEN + "/wr free" + ChatColor.GOLD + "' --> Get free disk space.");
     sendMessage(player, ChatColor.GOLD + "If you don't know the name of a world, type 'me' instead.");
     return true;
   }
