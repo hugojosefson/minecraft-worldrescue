@@ -13,8 +13,6 @@
     <mainClass>${javaPackage}.WorldRescue</mainClass>
     <apiVersion>1.16</apiVersion>
     <author>hugojosefson</author>
-    <internal.repo.dir>${project.basedir}/../../../${github.repo}-mvn-repo</internal.repo.dir>
-    <github.global.server>github</github.global.server>
     <github.user>hugojosefson</github.user>
     <github.repo>minecraft-worldrescue</github.repo>
   </properties>
@@ -164,35 +162,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>2.7</version>
-        <configuration>
-          <altDeploymentRepository>internal.repo::default::file://${internal.repo.dir}</altDeploymentRepository>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>com.github.github</groupId>
-        <artifactId>site-maven-plugin</artifactId>
-        <version>0.12</version>
-        <configuration>
-          <message>Maven artifacts for ${project.version}</message>
-          <outputDirectory>${internal.repo.dir}</outputDirectory>
-          <branch>refs/heads/mvn-repo</branch>
-          <includes><include>**/*</include></includes>
-          <repositoryOwner>${github.user}</repositoryOwner>
-          <repositoryName>${github.repo}</repositoryName>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>site</goal>
-            </goals>
-            <phase>deploy</phase>
-          </execution>
-        </executions>
-      </plugin>
-
     </plugins>
   </build>
   <developers>
@@ -259,9 +228,9 @@
   </dependencies>
   <distributionManagement>
     <repository>
-      <id>internal.repo</id>
-      <name>Temporary Staging Repository</name>
-      <url>file://${internal.repo.dir}</url>
+      <id>github</id>
+      <name>GitHub ${github.user} Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/${github.user}/${github.repo}</url>
     </repository>
   </distributionManagement>
 </project>
