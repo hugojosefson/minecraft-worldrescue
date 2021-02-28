@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.hugojosefson.mc.worldrescue</groupId>
   <artifactId>worldrescue</artifactId>
-  <version>2.0.0-beta3-SNAPSHOT</version>
+  <version>2.0.0-beta3</version>
   <name>WorldRescue</name>
   <description>Backup/Restore your world.</description>
   <url>${project.scm.url}</url>
@@ -227,7 +227,7 @@
     <developerConnection>
       scm:git:[fetch=]${project.scm.url}[push=]ssh://git@github.com/${github.user}/${github.repo}
     </developerConnection>
-    <tag>HEAD</tag>
+    <tag>worldrescue-2.0.0-beta3</tag>
   </scm>
   <repositories>
     <repository>
