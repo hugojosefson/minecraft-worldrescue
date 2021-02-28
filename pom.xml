@@ -82,9 +82,8 @@
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.2.4</version>
         <configuration>
-          <finalName>${project.name}</finalName>
           <minimizeJar>true</minimizeJar>
-          <shadedArtifactAttached>false</shadedArtifactAttached>
+          <shadedArtifactAttached>true</shadedArtifactAttached>
           <artifactSet>
             <includes>
               <include>commons-io:commons-io</include>
