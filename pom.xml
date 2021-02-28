@@ -19,7 +19,6 @@
     <github.repo>minecraft-worldrescue</github.repo>
   </properties>
   <build>
-    <finalName>${project.name}</finalName>
     <resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -83,6 +82,7 @@
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.2.4</version>
         <configuration>
+          <finalName>${project.name}</finalName>
           <minimizeJar>true</minimizeJar>
           <shadedArtifactAttached>true</shadedArtifactAttached>
           <artifactSet>
