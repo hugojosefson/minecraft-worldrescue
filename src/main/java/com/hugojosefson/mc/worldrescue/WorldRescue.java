@@ -1,7 +1,3 @@
-//
-// Decompiled by Procyon v0.5.36
-//
-
 package com.hugojosefson.mc.worldrescue;
 
 import com.hugojosefson.mc.worldrescue.autosave.AutosaveRunnable;

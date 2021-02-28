@@ -1,7 +1,3 @@
-//
-// Decompiled by Procyon v0.5.36
-//
-
 package com.hugojosefson.mc.worldrescue.commands;
 
 import com.hugojosefson.mc.worldrescue.WorldRescue;
