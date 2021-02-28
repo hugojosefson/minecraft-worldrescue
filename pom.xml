@@ -119,6 +119,7 @@
         <configuration>
           <autoVersionSubmodules>true</autoVersionSubmodules>
           <goals>deploy</goals>
+          <releaseProfiles>github-release</releaseProfiles>
         </configuration>
       </plugin>
       <plugin>
@@ -162,28 +163,45 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>de.jutzig</groupId>
-        <artifactId>github-release-plugin</artifactId>
-        <version>1.4.0</version>
-        <configuration>
-          <description>${project.version}</description>
-          <releaseName>${project.scm.tag}</releaseName>
-          <overwriteArtifact>true</overwriteArtifact>
-          <deleteRelease>true</deleteRelease>
-          <artifact>${project.build.directory}/${project.name}.${project.packaging}</artifact>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>deploy</phase>
-            <goals>
-              <goal>release</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>de.jutzig</groupId>
+          <artifactId>github-release-plugin</artifactId>
+          <version>1.4.0</version>
+          <configuration>
+            <description>${project.version}</description>
+            <releaseName>${project.scm.tag}</releaseName>
+            <overwriteArtifact>true</overwriteArtifact>
+            <deleteRelease>true</deleteRelease>
+            <artifact>${project.build.directory}/${project.name}.${project.packaging}</artifact>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
+  <profiles>
+    <profile>
+      <id>github-release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>de.jutzig</groupId>
+            <artifactId>github-release-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>release</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
   <developers>
     <developer>
       <id>hugojosefson</id>
