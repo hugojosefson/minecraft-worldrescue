@@ -6,6 +6,11 @@ Plugin for Bukkit compatible Minecraft servers, to easily backup and restore you
 
 This plugin now works with Minecraft API v1.16.
 
+## Download
+
+Download the latest release:
+[WorldRescue.jar](https://github.com/hugojosefson/minecraft-worldrescue/releases/latest/download/WorldRescue.jar).
+
 ## Credit
 
 Based on the excellent [WorldRebuild](https://www.curseforge.com/minecraft/bukkit-plugins/worldrebuild) plugin from
