@@ -10,8 +10,11 @@ import com.hugojosefson.mc.worldrescue.commands.PluginCommandNotFoundException;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+
+import static java.lang.String.join;
 
 public class WorldRescue extends JavaPlugin {
   public final Commands commands;
@@ -33,7 +36,8 @@ public class WorldRescue extends JavaPlugin {
     config.options().copyDefaults(true);
     this.saveConfig();
 
-    System.out.println("[" + this.getDescription().getName() + "] " + this.getDescription().getVersion() + " (by hugojosefson) enabled.");
+    final PluginDescriptionFile pluginYml = this.getDescription();
+    System.out.println("[" + pluginYml.getName() + "] " + pluginYml.getVersion() + " (by " + join(", ", pluginYml.getAuthors()) + ") enabled.");
   }
 
   private void scheduleAutosave(final FileConfiguration config) {
@@ -55,6 +59,7 @@ public class WorldRescue extends JavaPlugin {
   }
 
   public void onDisable() {
-    System.out.println("[" + this.getDescription().getName() + "] " + this.getDescription().getVersion() + " (by hugojosefson) disabled.");
+    final PluginDescriptionFile pluginYml = this.getDescription();
+    System.out.println("[" + pluginYml.getName() + "] " + pluginYml.getVersion() + " (by " + join(", ", pluginYml.getAuthors()) + ") disabled.");
   }
 }
