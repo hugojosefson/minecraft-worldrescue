@@ -4,9 +4,8 @@
 
 package com.hugojosefson.mc.worldrescue.commands;
 
-import com.hugojosefson.mc.worldrescue.io.Io;
 import com.hugojosefson.mc.worldrescue.WorldRescue;
-import org.apache.commons.io.FileUtils;
+import com.hugojosefson.mc.worldrescue.io.Io;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -20,8 +19,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Optional;
@@ -64,7 +61,7 @@ public class Commands implements CommandExecutor {
   }
 
   public static boolean free(final Player player, final String[] args) {
-    sendMessage(player, "There is "+ Io.getFreeSpace() / 1024 / 1024 +" MB of free space left.");
+    sendMessage(player, "There is " + Io.getFreeSpace() / 1024 / 1024 + " MB of free space left.");
     return true;
   }
 
@@ -209,7 +206,7 @@ public class Commands implements CommandExecutor {
         if (isDefault) {
           Commands.sendMessage(player, ChatColor.RED + "The world '" + world + "' is your default world. Due to a restriction with Bukkit, WorldRescue can not create/restore a backup.");
           Commands.sendMessage(player, ChatColor.RED + "To solve this problem, type '" + ChatColor.GREEN + "/wr duplicate " + world + ChatColor.RED + "'.");
-          Commands.sendMessage(player, ChatColor.RED + "This will create the new world '" + world + "-new' which will be the same as the world '" + world + "' and WorldRescue will be able to create/restore backups from '"+world+"-new'.");
+          Commands.sendMessage(player, ChatColor.RED + "This will create the new world '" + world + "-new' which will be the same as the world '" + world + "' and WorldRescue will be able to create/restore backups from '" + world + "-new'.");
           Commands.sendMessage(player, ChatColor.RED + "You can also open your server.config and change the point 'level-name' to another world.");
         } else {
           load(Bukkit.getServer().getWorlds().get(0).getName());

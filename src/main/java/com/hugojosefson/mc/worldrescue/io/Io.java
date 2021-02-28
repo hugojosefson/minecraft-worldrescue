@@ -38,9 +38,10 @@ public class Io {
     }
   }
 
-  private static WorldAndIndex getNameAndIndex(final String directoryName){
+  private static WorldAndIndex getNameAndIndex(final String directoryName) {
     final Matcher matcher = WORLD_AND_INDEX.matcher(directoryName);
-    if (!matcher.find()) throw new IllegalArgumentException("directoryName '" + directoryName + "' unexpectedly did not match " + WORLD_AND_INDEX);
+    if (!matcher.find())
+      throw new IllegalArgumentException("directoryName '" + directoryName + "' unexpectedly did not match " + WORLD_AND_INDEX);
     return new WorldAndIndex(matcher.group(1), matcher.group(2));
   }
 
