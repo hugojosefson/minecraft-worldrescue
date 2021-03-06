@@ -91,15 +91,16 @@ public class Commands implements CommandExecutor {
       sendMessage(player, ChatColor.GOLD + "Creating a copy of the world '" + world + "' with the name '" + newWorld + "'. This may take a while.");
       create(newWorld);
       unload(newWorld, true);
-      if (Io.copy(Paths.get(world), Paths.get(newWorld))) {
-        Io.delete(Paths.get(newWorld, "uid.dat"));
-        load(newWorld);
-        final String tpCommand = hasMultiverse() ? "/mvtp" : "/wr tp";
-        sendMessage(player, ChatColor.GOLD + "Done. Now just type '" + ChatColor.GREEN + tpCommand + " " + newWorld + ChatColor.GOLD + "' and use this world to continue building.");
-      } else {
+      if (!Io.copy(Paths.get(world), Paths.get(newWorld))) {
         sendMessage(player, ChatColor.DARK_RED + "Copying world '" + world + " failed. Does it even exist?");
         delete(newWorld);
+        return;
       }
+
+      Io.delete(Paths.get(newWorld, "uid.dat"));
+      load(newWorld);
+      final String tpCommand = hasMultiverse() ? "/mvtp" : "/wr tp";
+      sendMessage(player, ChatColor.GOLD + "Done. Now just type '" + ChatColor.GREEN + tpCommand + " " + newWorld + ChatColor.GOLD + "' and use this world to continue building.");
     });
     return true;
   }
