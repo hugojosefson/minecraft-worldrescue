@@ -17,16 +17,21 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.copyOfRange;
+import static java.util.Arrays.stream;
+import static org.apache.commons.lang.StringUtils.defaultString;
 
 public class Commands implements CommandExecutor {
   public final WorldRescue plugin;
 
   private final SubCommandHandler[] subCommandHandlers = new SubCommandHandler[]{
     new SubCommandHandler("free", Commands::free),
-    new SubCommandHandler("save", this::saveRebuild),
-    new SubCommandHandler("rebuild", this::saveRebuild),
+    new SubCommandHandler("save", this::save),
+    new SubCommandHandler("rebuild", this::rebuild),
     new SubCommandHandler("delete", Commands::delete),
     new SubCommandHandler("list", Commands::listBackups),
     new SubCommandHandler("duplicate", this::duplicate),
@@ -38,7 +43,7 @@ public class Commands implements CommandExecutor {
   }
 
   @Override
-  public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command, final @NotNull String commandLabel, final String[] args) {
+  public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command, final @NotNull String commandLabel, String[] args) {
     final Player player = sender instanceof Player
       ? (Player) sender
       : null;
@@ -48,11 +53,12 @@ public class Commands implements CommandExecutor {
     }
 
     final String subCommand = args[0];
+    final String[] actualArgs = copyOfRange(args, 1, args.length);
 
-    return Arrays.stream(subCommandHandlers)
+    return stream(subCommandHandlers)
       .filter(handler -> handler.handles(subCommand))
       .findFirst()
-      .map(handler -> handler.handle(player, args))
+      .map(handler -> handler.handle(player, subCommand, actualArgs))
       .orElseGet(() -> help(player));
   }
 
@@ -67,8 +73,7 @@ public class Commands implements CommandExecutor {
       final String backupIndex = args[2];
 
       if (Io.delete(Paths.get(world + "_" + backupIndex + "#backup"))) {
-        final String playerDisplayName = player == null ? "Admin on the server console" : player.getDisplayName();
-        Bukkit.getServer().broadcastMessage(playerDisplayName + ChatColor.GREEN + " deleted the backup '" + world + "' (" + backupIndex + ").");
+        Bukkit.getServer().broadcastMessage(displayName(player) + ChatColor.GREEN + " deleted the backup '" + world + "' (" + backupIndex + ").");
       } else {
         sendMessage(player, ChatColor.DARK_RED + "The backup '" + world + "' (" + backupIndex + ") does not exist.");
       }
@@ -76,6 +81,10 @@ public class Commands implements CommandExecutor {
       help(player);
     }
     return true;
+  }
+
+  private static String displayName(final Player player) {
+    return player == null ? "Admin on the server console" : player.getDisplayName();
   }
 
   public boolean duplicate(final Player player, final String[] args) {
@@ -90,7 +99,7 @@ public class Commands implements CommandExecutor {
     Bukkit.getScheduler().runTask(plugin, () -> {
       sendMessage(player, ChatColor.GOLD + "Creating a copy of the world '" + world + "' with the name '" + newWorld + "'. This may take a while.");
       create(newWorld);
-      unload(newWorld, true);
+      unload(newWorld);
       if (!Io.copy(Paths.get(world), Paths.get(newWorld))) {
         sendMessage(player, ChatColor.DARK_RED + "Copying world '" + world + " failed. Does it even exist?");
         delete(newWorld);
@@ -162,107 +171,191 @@ public class Commands implements CommandExecutor {
     return true;
   }
 
-  public boolean saveRebuild(final Player player, final String[] args) {
-    if ((args.length > 0 && player != null) || (player == null && args.length > 1)) {
-      Bukkit.getScheduler().runTask(plugin, () -> {
-        String world;
-        String arg;
-        String backup;
-        if (args.length == 1) {
-          arg = "default";
-          world = player.getWorld().getName();
-          backup = player.getWorld().getName() + "_default" + "#backup";
-        } else if (args.length == 2) {
-          if (args[1].equals("me") && player != null) {
-            args[1] = player.getWorld().getName();
-          }
-          arg = "default";
-          world = args[1];
-          backup = args[1] + "_default" + "#backup";
-        } else {
-          if (args[1].equals("me") && player != null) {
-            args[1] = player.getWorld().getName();
-          }
-          arg = args[2];
-          world = args[1];
-          backup = args[1] + "_" + arg + "#backup";
-        }
-        if (args[0].equalsIgnoreCase("save")) {
-          Commands.sendMessage(player, ChatColor.GOLD + "Saving the world '" + world + "' (" + arg + ")...");
-        } else {
-          Commands.sendMessage(player, ChatColor.GOLD + "Rebuilding the world '" + world + "' (" + arg + ")...");
-        }
-        final Player[] playerInWorld = new Player[Bukkit.getOnlinePlayers().size()];
-        final Location[] playerInWorldLoc = new Location[Bukkit.getOnlinePlayers().size()];
-        final GameMode[] playerInWorldLGM = new GameMode[Bukkit.getOnlinePlayers().size()];
-        int i = 0;
-        boolean isDefault = false;
-        if (Bukkit.getServer().getWorld(world) == Bukkit.getServer().getWorlds().get(0)) {
-          isDefault = true;
-        }
-        if (isDefault) {
-          Commands.sendMessage(player, ChatColor.RED + "The world '" + world + "' is your default world. Due to a restriction with Bukkit, WorldRescue can not create/restore a backup.");
-          Commands.sendMessage(player, ChatColor.RED + "To solve this problem, type '" + ChatColor.GREEN + "/wr duplicate " + world + ChatColor.RED + "'.");
-          Commands.sendMessage(player, ChatColor.RED + "This will create the new world '" + world + "-new' which will be the same as the world '" + world + "' and WorldRescue will be able to create/restore backups from '" + world + "-new'.");
-          Commands.sendMessage(player, ChatColor.RED + "You can also open your server.config and change the point 'level-name' to another world.");
-        } else {
-          load(Bukkit.getServer().getWorlds().get(0).getName());
-          for (final Player pInWorld : Bukkit.getServer().getOnlinePlayers()) {
-            if (pInWorld.getWorld().getName().equalsIgnoreCase(world)) {
-              playerInWorld[i] = pInWorld;
-              playerInWorldLoc[i] = pInWorld.getLocation();
-              playerInWorldLGM[i] = pInWorld.getGameMode();
-              if (!Commands.hasMultiverse()) {
-                teleport(pInWorld, Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-              }
-              ++i;
-            }
-          }
-          unload(world, true);
-          final boolean isSuccess;
-          if (args[0].equalsIgnoreCase("save")) {
-            isSuccess = Io.copy(Paths.get(world), Paths.get(backup));
-          } else {
-            isSuccess = Io.copy(Paths.get(backup), Paths.get(world));
-          }
-          Bukkit.getScheduler().runTask(plugin, () -> {
-            load(world);
-            boolean loaded = false;
-            while (!loaded) {
-              loaded = Bukkit.getServer().getWorlds().contains(Bukkit.getWorld(world));
-              if (loaded) {
-                Bukkit.getScheduler().runTaskLater(plugin, () ->
-                  IntStream
-                    .range(0, playerInWorld.length)
-                    .filter(i12 -> playerInWorld[i12] != null)
-                    .forEach(i12 -> teleport(playerInWorld[i12], playerInWorldLoc[i12])), 10L);
-                Bukkit.getScheduler().runTaskLater(plugin, () ->
-                  IntStream
-                    .range(0, playerInWorld.length)
-                    .filter(i1 -> playerInWorld[i1] != null)
-                    .forEach(i1 -> playerInWorld[i1].setGameMode(playerInWorldLGM[i1])), 20L);
-              }
-            }
-          });
-          if (isSuccess && player != null) {
-            if (args[0].equalsIgnoreCase("save")) {
-              Bukkit.getServer().broadcastMessage(player.getDisplayName() + ChatColor.GREEN + " saved the world '" + world + "' (" + arg + ").");
-            } else {
-              Bukkit.getServer().broadcastMessage(player.getDisplayName() + ChatColor.GREEN + " rebuilt the world '" + world + "' (" + arg + ").");
-            }
-          } else if (player != null) {
-            if (args[0].equalsIgnoreCase("save")) {
-              Commands.sendMessage(player, ChatColor.DARK_RED + "The world '" + world + "' with index '" + arg + "' does not exist.");
-            } else {
-              Commands.sendMessage(player, ChatColor.DARK_RED + "A backup of the world '" + world + "' with index '" + arg + "' does not exist.");
-            }
-          }
-        }
-      });
-    } else {
-      help(player);
+  public static boolean isDefaultWorld(final World world) {
+    final World defaultWorld = getDefaultWorld();
+    return world == defaultWorld;
+  }
+
+  public static boolean isDefaultWorld(final String worldName) {
+    final World world = Bukkit.getServer().getWorld(worldName);
+    return isDefaultWorld(world);
+  }
+
+  public static class TeleportablePlayer {
+
+    private final Player player;
+    public final Location location;
+    public final GameMode gameMode;
+    public TeleportablePlayer(Player player, Location location, GameMode gameMode) {
+      this.player = player;
+      this.location = location;
+      this.gameMode = gameMode;
     }
+
+    public Player getPlayer() {
+      return player;
+    }
+
+  }
+  public static TeleportablePlayer teleportablePlayer(final Player player) {
+    return new TeleportablePlayer(player, player.getLocation(), player.getGameMode());
+  }
+
+  public boolean save(Player player, String[] args) {
+    return save(player, args[0], args[1]);
+  }
+
+  public boolean save(final Player player, final String world, final String index) {
+    if (player == null && world == null) {
+      help(null);
+      return true;
+    }
+
+    Bukkit.getScheduler().runTask(plugin, () -> {
+      final String worldName = resolveWorldName(player, world);
+      final String backupIndex = defaultString(index, "default");
+
+      Commands.sendMessage(player, ChatColor.GOLD + "Saving the world '" + worldName + "' (" + backupIndex + ")...");
+
+      if (isDefaultWorld(worldName)) {
+        Commands.sendMessage(player, ChatColor.RED + "The world '" + worldName + "' is your default world. Due to a restriction with Bukkit, WorldRescue can not create/restore a backup.");
+        Commands.sendMessage(player, ChatColor.RED + "To solve this problem, type '" + ChatColor.GREEN + "/wr duplicate " + worldName + ChatColor.RED + "'.");
+        Commands.sendMessage(player, ChatColor.RED + "This will create the new world '" + worldName + "-new' which will be the same as the world '" + worldName + "' and WorldRescue will be able to create/restore backups from '" + worldName + "-new'.");
+        Commands.sendMessage(player, ChatColor.RED + "You can also open your server.config and change 'level-name' to point to another world.");
+        return;
+      }
+
+      load(getDefaultWorld().getName());
+      final List<TeleportablePlayer> playersInWorld = Bukkit.getServer().getOnlinePlayers().stream()
+        .filter(onlinePlayer -> worldName.equalsIgnoreCase(onlinePlayer.getWorld().getName()))
+        .map(Commands::teleportablePlayer)
+        .collect(Collectors.toCollection(Arrays::asList));
+
+      if (!hasMultiverse()) {
+        final Location spawnLocation = getDefaultWorld().getSpawnLocation();
+        playersInWorld.stream()
+          .map(TeleportablePlayer::getPlayer)
+          .forEach(playerInWorld -> teleport(playerInWorld, spawnLocation));
+      }
+
+      unload(worldName);
+      final String backupName = worldName + "_" + backupIndex + "#backup";
+      final boolean isSuccess = Io.copy(Paths.get(worldName), Paths.get(backupName));
+      if (isSuccess) {
+        Bukkit.getServer().broadcastMessage(displayName(player) + ChatColor.GREEN + " saved the world '" + worldName + "' (" + backupIndex + ").");
+      } else {
+        sendMessage(player, ChatColor.DARK_RED + "The world '" + worldName + "' with index '" + backupIndex + "' does not exist.");
+      }
+
+      load(worldName);
+      while (!Bukkit.getServer().getWorlds().contains(Bukkit.getWorld(worldName))) {
+        try {
+          Thread.sleep(50);
+        } catch (InterruptedException ignored) {
+        }
+      }
+
+      Bukkit.getScheduler().runTaskLater(
+        plugin,
+        () -> playersInWorld.forEach(p -> teleport(p.player, p.location)),
+        10L
+      );
+      Bukkit.getScheduler().runTaskLater(
+        plugin,
+        () -> playersInWorld.forEach(p -> p.player.setGameMode(p.gameMode)),
+        20L
+      );
+
+
+    });
     return true;
+  }
+
+  public boolean rebuild(Player player, String[] args) {
+    return rebuild(player, args[0], args[1]);
+  }
+
+  public boolean rebuild(final Player player, final String world, final String index) {
+    if (player == null && world == null) {
+      help(null);
+      return true;
+    }
+
+    Bukkit.getScheduler().runTask(plugin, () -> {
+      final String worldName = resolveWorldName(player, world);
+      final String backupIndex = defaultString(index, "default");
+
+      Commands.sendMessage(player, ChatColor.GOLD + "Rebuilding the world '" + worldName + "' (" + backupIndex + ")...");
+
+      if (isDefaultWorld(worldName)) {
+        Commands.sendMessage(player, ChatColor.RED + "The world '" + worldName + "' is your default world. Due to a restriction with Bukkit, WorldRescue can not create/restore a backup.");
+        Commands.sendMessage(player, ChatColor.RED + "To solve this problem, type '" + ChatColor.GREEN + "/wr duplicate " + worldName + ChatColor.RED + "'.");
+        Commands.sendMessage(player, ChatColor.RED + "This will create the new world '" + worldName + "-new' which will be the same as the world '" + worldName + "' and WorldRescue will be able to create/restore backups from '" + worldName + "-new'.");
+        Commands.sendMessage(player, ChatColor.RED + "You can also open your server.config and change 'level-name' to point to another world.");
+        return;
+      }
+
+      load(getDefaultWorld().getName());
+      final List<TeleportablePlayer> playersInWorld = Bukkit.getServer().getOnlinePlayers().stream()
+        .filter(onlinePlayer -> worldName.equalsIgnoreCase(onlinePlayer.getWorld().getName()))
+        .map(Commands::teleportablePlayer)
+        .collect(Collectors.toCollection(Arrays::asList));
+
+      if (!hasMultiverse()) {
+        final Location spawnLocation = getDefaultWorld().getSpawnLocation();
+        playersInWorld.stream()
+          .map(TeleportablePlayer::getPlayer)
+          .forEach(playerInWorld -> teleport(playerInWorld, spawnLocation));
+      }
+
+      unload(worldName);
+      final String backupName = worldName + "_" + backupIndex + "#backup";
+      final boolean isSuccess = Io.copy(Paths.get(backupName), Paths.get(worldName));
+      if (isSuccess) {
+        Bukkit.getServer().broadcastMessage(displayName(player) + ChatColor.GREEN + " rebuilt the world '" + worldName + "' (" + backupIndex + ").");
+      } else {
+        sendMessage(player, ChatColor.DARK_RED + "A backup of the world '" + worldName + "' with index '" + backupIndex + "' does not exist.");
+      }
+
+      load(worldName);
+      while (!Bukkit.getServer().getWorlds().contains(Bukkit.getWorld(worldName))) {
+        try {
+          Thread.sleep(50);
+        } catch (InterruptedException ignored) {
+        }
+      }
+
+      Bukkit.getScheduler().runTaskLater(
+        plugin,
+        () -> playersInWorld.forEach(p -> teleport(p.player, p.location)),
+        10L
+      );
+      Bukkit.getScheduler().runTaskLater(
+        plugin,
+        () -> playersInWorld.forEach(p -> p.player.setGameMode(p.gameMode)),
+        20L
+      );
+
+
+    });
+    return true;
+  }
+
+  private static World getDefaultWorld() {
+    return Bukkit.getServer().getWorlds().get(0);
+  }
+
+  @NotNull
+  private static String resolveWorldName(final Player player, final String worldName) {
+    if (worldName != null && !"me".equals(worldName)) {
+      return worldName;
+    }
+
+    if (player == null) {
+      throw new IllegalArgumentException("Either player or worldName must be non-null to resolve a valid worldName.");
+    }
+
+    return player.getWorld().getName();
   }
 
   public static boolean tp(final Player player, final String[] args) {
@@ -282,19 +375,19 @@ public class Commands implements CommandExecutor {
     }
   }
 
-  static void load(final String world) {
+  static void load(final String worldName) {
     if (hasMultiverse()) {
-      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mv load " + world);
+      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mv load " + worldName);
     } else {
-      Bukkit.getServer().createWorld(new WorldCreator(world));
+      Bukkit.getServer().createWorld(new WorldCreator(worldName));
     }
   }
 
-  static void unload(final String world, final boolean saveChunksBeforeUnloading) {
+  static void unload(final String world) {
     if (hasMultiverse()) {
       Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mv unload " + world);
     } else {
-      Bukkit.getServer().unloadWorld(world, saveChunksBeforeUnloading);
+      Bukkit.getServer().unloadWorld(world, true);
     }
   }
 
@@ -329,4 +422,3 @@ public class Commands implements CommandExecutor {
   }
 
 }
-

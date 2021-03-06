@@ -22,8 +22,7 @@ public class AutosaveRunnable implements Runnable {
     final List<World> activeWorlds = Bukkit.getServer().getWorlds();
     activeWorlds.stream()
       .map(World::getName)
-      .map(name -> new String[]{"save", name, "autosave"})
-      .forEach(args -> commands.saveRebuild(null, args));
+      .forEach(worldName -> commands.save(null, worldName, "autosave"));
 
     Bukkit.broadcastMessage("§f[§WorldRescue§f] §6Finished autosave.");
   }
