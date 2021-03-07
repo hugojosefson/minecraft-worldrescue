@@ -1,5 +1,6 @@
 package com.hugojosefson.mc.worldrescue.commands;
 
+import com.helospark.lightdi.annotation.Autowired;
 import com.hugojosefson.mc.worldrescue.WorldRescue;
 import com.hugojosefson.mc.worldrescue.io.Io;
 import org.bukkit.Bukkit;
@@ -42,6 +43,7 @@ public class Commands implements CommandExecutor {
     new SubCommandHandler("tp", Commands::tp)
   };
 
+  @Autowired
   public Commands(final WorldRescue plugin) {
     this.plugin = plugin;
   }

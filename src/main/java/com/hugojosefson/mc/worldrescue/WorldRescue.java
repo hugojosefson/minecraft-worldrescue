@@ -1,6 +1,8 @@
 package com.hugojosefson.mc.worldrescue;
 
-import com.hugojosefson.mc.worldrescue.autosave.AutosaveRunnable;
+import com.helospark.lightdi.LightDiContext;
+import com.helospark.lightdi.annotation.Autowired;
+import com.hugojosefson.mc.worldrescue.scheduled.AutoSave;
 import com.hugojosefson.mc.worldrescue.commands.Commands;
 import com.hugojosefson.mc.worldrescue.commands.PluginCommandNotFoundException;
 import org.bukkit.Bukkit;
@@ -10,13 +12,19 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import static com.helospark.lightdi.LightDi.initContextByPackage;
 import static java.lang.String.join;
 
 public class WorldRescue extends JavaPlugin {
+
+  @Autowired
   public final Commands commands;
 
   public WorldRescue() {
-    this.commands = new Commands(this);
+    final LightDiContext diContext = initContextByPackage(this.getClass().getPackage().getName());
+    diContext.registerSingleton(this);
+
+    this.commands = diContext.getBean(Commands.class);
   }
 
   public void onEnable() {
@@ -41,7 +49,7 @@ public class WorldRescue extends JavaPlugin {
     final long period = 20L * 60 * config.getInt("Autosave.Frequency (in min)");
     Bukkit.getScheduler().scheduleSyncRepeatingTask(
       this,
-      new AutosaveRunnable(),
+      new AutoSave(commands, pluginDescription, server),
       delay,
       period
     );
