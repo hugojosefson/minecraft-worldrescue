@@ -3,7 +3,6 @@ package com.hugojosefson.mc.worldrescue.commands;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.List;
 import java.util.function.BiFunction;
 
 import static com.hugojosefson.mc.worldrescue.commands.Commands.sendMessage;
