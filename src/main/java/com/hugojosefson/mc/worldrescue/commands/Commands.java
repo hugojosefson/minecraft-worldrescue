@@ -1,7 +1,6 @@
 package com.hugojosefson.mc.worldrescue.commands;
 
 import com.hugojosefson.mc.worldrescue.WorldRescue;
-import com.hugojosefson.mc.worldrescue.fn.PlayerFunctions;
 import com.hugojosefson.mc.worldrescue.io.Io;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -22,6 +21,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.hugojosefson.mc.worldrescue.fn.PlayerFunctions.displayName;
+import static com.hugojosefson.mc.worldrescue.fn.PlayerFunctions.resolveWorld;
+import static com.hugojosefson.mc.worldrescue.fn.PlayerFunctions.resolveWorldName;
 import static java.util.Arrays.copyOfRange;
 import static java.util.Arrays.stream;
 import static org.apache.commons.lang.StringUtils.defaultString;
@@ -79,12 +81,12 @@ public class Commands implements CommandExecutor {
       return true;
     }
 
-    final World world = PlayerFunctions.resolveWorld(player, worldToDeleteFrom);
+    final World world = resolveWorld(player, worldToDeleteFrom);
     final String worldName = world.getName();
     final String backupNameToDelete = worldName + "_" + indexToDelete + "#backup";
 
     if (Io.delete(Paths.get(backupNameToDelete))) {
-      Bukkit.getServer().broadcastMessage(PlayerFunctions.displayName(player) + ChatColor.GREEN + " deleted the backup '" + worldName + "' (" + indexToDelete + ").");
+      Bukkit.getServer().broadcastMessage(displayName(player) + ChatColor.GREEN + " deleted the backup '" + worldName + "' (" + indexToDelete + ").");
     } else {
       sendMessage(player, ChatColor.DARK_RED + "The backup '" + worldName + "' (" + indexToDelete + ") does not exist.");
     }
@@ -97,7 +99,7 @@ public class Commands implements CommandExecutor {
       return true;
     }
 
-    final String world = PlayerFunctions.resolveWorldName(player, args[1]);
+    final String world = resolveWorldName(player, args[1]);
     final String newWorld = world + "-new"; // TODO: Make sure it doesn't already exist. If so, append a number. Keep looking until an available name+number is found.
 
     Bukkit.getScheduler().runTask(plugin, () -> {
@@ -122,7 +124,7 @@ public class Commands implements CommandExecutor {
     if (args.length == 1) {
       return player.getWorld().getName();
     }
-    return PlayerFunctions.resolveWorldName(player, args[1]);
+    return resolveWorldName(player, args[1]);
   }
 
   public static boolean listBackups(final Player player, final String[] args) {
@@ -184,7 +186,7 @@ public class Commands implements CommandExecutor {
     }
 
     Bukkit.getScheduler().runTask(plugin, () -> {
-      final World world = PlayerFunctions.resolveWorld(player, worldToRebuild);
+      final World world = resolveWorld(player, worldToRebuild);
       final String worldName = world.getName();
       final String backupIndex = defaultString(index, "default");
       final String backupName = worldName + "_" + backupIndex + "#backup";
@@ -204,7 +206,7 @@ public class Commands implements CommandExecutor {
 
       final boolean isSuccess = Io.copy(Paths.get(worldName), Paths.get(backupName));
       if (isSuccess) {
-        Bukkit.getServer().broadcastMessage(PlayerFunctions.displayName(player) + ChatColor.GREEN + " saved the world '" + worldName + "' (" + backupIndex + ").");
+        Bukkit.getServer().broadcastMessage(displayName(player) + ChatColor.GREEN + " saved the world '" + worldName + "' (" + backupIndex + ").");
       } else {
         sendMessage(player, ChatColor.DARK_RED + "The world '" + worldName + "' with index '" + backupIndex + "' does not exist.");
       }
@@ -225,7 +227,7 @@ public class Commands implements CommandExecutor {
     }
 
     Bukkit.getScheduler().runTask(plugin, () -> {
-      final World world = PlayerFunctions.resolveWorld(player, worldToRebuild);
+      final World world = resolveWorld(player, worldToRebuild);
       final String worldName = world.getName();
       final String backupIndex = defaultString(index, "default");
       final String backupName = worldName + "_" + backupIndex + "#backup";
@@ -256,7 +258,7 @@ public class Commands implements CommandExecutor {
       unload(worldName);
       final boolean isSuccess = Io.copy(Paths.get(backupName), Paths.get(worldName));
       if (isSuccess) {
-        Bukkit.getServer().broadcastMessage(PlayerFunctions.displayName(player) + ChatColor.GREEN + " rebuilt the world '" + worldName + "' (" + backupIndex + ").");
+        Bukkit.getServer().broadcastMessage(displayName(player) + ChatColor.GREEN + " rebuilt the world '" + worldName + "' (" + backupIndex + ").");
       } else {
         sendMessage(player, ChatColor.DARK_RED + "A backup of the world '" + worldName + "' with index '" + backupIndex + "' does not exist.");
       }
