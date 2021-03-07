@@ -4,7 +4,7 @@ description: ${project.description}
 author: ${author}
 website: ${project.url}
 
-api-version: ${apiVersion}
+api-version: ${bukkitApiVersion}
 main: ${mainClass}
 
 commands:

@@ -11,7 +11,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <javaPackage>${project.groupId}</javaPackage>
     <mainClass>${javaPackage}.WorldRescue</mainClass>
-    <apiVersion>1.16</apiVersion>
+    <bukkitApiVersion>1.16</bukkitApiVersion>
     <author>hugojosefson</author>
     <github.user>hugojosefson</github.user>
     <github.repo>minecraft-worldrescue</github.repo>
