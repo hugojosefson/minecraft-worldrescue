@@ -11,6 +11,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <javaPackage>${project.groupId}</javaPackage>
     <mainClass>${javaPackage}.WorldRescue</mainClass>
+    <javaVersion>1.8</javaVersion>
     <bukkitApiVersion>1.16</bukkitApiVersion>
     <author>hugojosefson</author>
     <github.user>hugojosefson</github.user>
@@ -59,8 +60,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>${javaVersion}</source>
+          <target>${javaVersion}</target>
         </configuration>
       </plugin>
       <plugin>
