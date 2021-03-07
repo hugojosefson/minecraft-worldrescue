@@ -19,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -65,7 +64,7 @@ public class Commands implements CommandExecutor {
       .orElseGet(() -> help(player));
   }
 
-  public static boolean free(final Player player, final String[] args) {
+  public static boolean free(final Player player, final String[] ignored) {
     sendMessage(player, "There is " + Io.getFreeSpace() / 1024 / 1024 + " MB of free space left.");
     return true;
   }
@@ -80,7 +79,7 @@ public class Commands implements CommandExecutor {
       return true;
     }
 
-    final World world = resolveWorld(player, worldToDeleteFrom);
+    final World world = PlayerFunctions.resolveWorld(player, worldToDeleteFrom);
     final String worldName = world.getName();
     final String backupNameToDelete = worldName + "_" + indexToDelete + "#backup";
 
@@ -98,7 +97,7 @@ public class Commands implements CommandExecutor {
       return true;
     }
 
-    final String world = resolveWorldName(player, args[1]);
+    final String world = PlayerFunctions.resolveWorldName(player, args[1]);
     final String newWorld = world + "-new"; // TODO: Make sure it doesn't already exist. If so, append a number. Keep looking until an available name+number is found.
 
     Bukkit.getScheduler().runTask(plugin, () -> {
@@ -119,18 +118,11 @@ public class Commands implements CommandExecutor {
     return true;
   }
 
-  private static String resolveWorldName(final Player player, final String world) {
-    if ("me".equals(world) && player != null) {
-      return player.getWorld().getName();
-    }
-    return world;
-  }
-
   private static String getWorldFromListBackupsArgs(final Player player, final String[] args) {
     if (args.length == 1) {
       return player.getWorld().getName();
     }
-    return resolveWorldName(player, args[1]);
+    return PlayerFunctions.resolveWorldName(player, args[1]);
   }
 
   public static boolean listBackups(final Player player, final String[] args) {
@@ -192,7 +184,7 @@ public class Commands implements CommandExecutor {
     }
 
     Bukkit.getScheduler().runTask(plugin, () -> {
-      final World world = resolveWorld(player, worldToRebuild);
+      final World world = PlayerFunctions.resolveWorld(player, worldToRebuild);
       final String worldName = world.getName();
       final String backupIndex = defaultString(index, "default");
       final String backupName = worldName + "_" + backupIndex + "#backup";
@@ -233,7 +225,7 @@ public class Commands implements CommandExecutor {
     }
 
     Bukkit.getScheduler().runTask(plugin, () -> {
-      final World world = resolveWorld(player, worldToRebuild);
+      final World world = PlayerFunctions.resolveWorld(player, worldToRebuild);
       final String worldName = world.getName();
       final String backupIndex = defaultString(index, "default");
       final String backupName = worldName + "_" + backupIndex + "#backup";
@@ -295,19 +287,6 @@ public class Commands implements CommandExecutor {
 
   private static World getDefaultWorld() {
     return Bukkit.getServer().getWorlds().get(0);
-  }
-
-  @NotNull
-  private static World resolveWorld(final Player player, final String worldName) {
-    if (worldName != null && !"me".equals(worldName)) {
-      return Objects.requireNonNull(Bukkit.getServer().getWorld(worldName));
-    }
-
-    if (player == null) {
-      throw new IllegalArgumentException("Either player or worldName must be non-null to resolve a valid worldName.");
-    }
-
-    return player.getWorld();
   }
 
   public static boolean tp(final Player player, final String[] args) {
