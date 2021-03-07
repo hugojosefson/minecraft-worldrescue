@@ -11,6 +11,4 @@ commands:
   worldrescue:
     description: Manage your backups.
     usage: /worldrescue <command>
-  wr:
-    description: Manage your backups.
-    usage: /wr <command>
+    aliases: ["wr"]

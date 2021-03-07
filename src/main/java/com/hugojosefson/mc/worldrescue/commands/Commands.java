@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.hugojosefson.mc.worldrescue.fn.PlayerFunctions.displayName;
-import static com.hugojosefson.mc.worldrescue.fn.PlayerFunctions.resolveWorld;
-import static com.hugojosefson.mc.worldrescue.fn.PlayerFunctions.resolveWorldName;
+import static com.hugojosefson.mc.worldrescue.fn.BukkitFunctions.displayName;
+import static com.hugojosefson.mc.worldrescue.fn.BukkitFunctions.resolveWorld;
+import static com.hugojosefson.mc.worldrescue.fn.BukkitFunctions.resolveWorldName;
 import static java.util.Arrays.copyOfRange;
 import static java.util.Arrays.stream;
 import static org.apache.commons.lang.StringUtils.defaultString;
