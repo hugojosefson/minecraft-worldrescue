@@ -12,6 +12,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import java.util.Optional;
+
 @Component
 public class BukkitBeans {
   @Bean
@@ -34,6 +36,12 @@ public class BukkitBeans {
   @Autowired
   public PluginDescriptionFile getPluginDescriptionFile(Plugin plugin) {
     return plugin.getDescription();
+  }
+
+  @Bean
+  @Autowired
+  public Optional<PluginDescriptionFile> getOptionalPluginDescriptionFile(Plugin plugin) {
+    return Optional.of(getPluginDescriptionFile(plugin));
   }
 
   @Bean
