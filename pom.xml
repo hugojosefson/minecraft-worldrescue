@@ -88,6 +88,7 @@
             <includes>
               <include>commons-io:commons-io</include>
               <include>com.helospark:lightdi</include>
+              <include>io.github.lukehutch:fast-classpath-scanner</include>
             </includes>
           </artifactSet>
           <filters>
@@ -103,6 +104,12 @@
                 <exclude>META-INF/*</exclude>
               </excludes>
             </filter>
+            <filter>
+              <artifact>io.github.lukehutch:fast-classpath-scanner</artifact>
+              <excludes>
+                <exclude>META-INF/*</exclude>
+              </excludes>
+            </filter>
           </filters>
           <relocations>
             <relocation>
@@ -112,6 +119,10 @@
             <relocation>
               <pattern>com.helospark.lightdi</pattern>
               <shadedPattern>${javaPackage}.vendor.com.helospark.lightdi</shadedPattern>
+            </relocation>
+            <relocation>
+              <pattern>io.github.lukehutch.fastclasspathscanner</pattern>
+              <shadedPattern>${javaPackage}.vendor.io.github.lukehutch.fastclasspathscanner</shadedPattern>
             </relocation>
           </relocations>
         </configuration>
@@ -280,6 +291,11 @@
       <groupId>com.helospark</groupId>
       <artifactId>lightdi</artifactId>
       <version>0.0.9</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.lukehutch</groupId>
+      <artifactId>fast-classpath-scanner</artifactId>
+      <version>2.4.5</version>
     </dependency>
   </dependencies>
   <distributionManagement>
