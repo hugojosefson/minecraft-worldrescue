@@ -89,6 +89,7 @@
               <include>commons-io:commons-io</include>
               <include>com.helospark:lightdi</include>
               <include>io.github.lukehutch:fast-classpath-scanner</include>
+              <include>javax.annotation:javax.annotation-api</include>
             </includes>
           </artifactSet>
           <filters>
@@ -110,6 +111,12 @@
                 <exclude>META-INF/*</exclude>
               </excludes>
             </filter>
+            <filter>
+              <artifact>javax.annotation:javax.annotation-api</artifact>
+              <excludes>
+                <exclude>META-INF/*</exclude>
+              </excludes>
+            </filter>
           </filters>
           <relocations>
             <relocation>
@@ -123,6 +130,10 @@
             <relocation>
               <pattern>io.github.lukehutch.fastclasspathscanner</pattern>
               <shadedPattern>${javaPackage}.vendor.io.github.lukehutch.fastclasspathscanner</shadedPattern>
+            </relocation>
+            <relocation>
+              <pattern>javax.annotation:javax.annotation-api</pattern>
+              <shadedPattern>${javaPackage}.vendor.javax.annotation</shadedPattern>
             </relocation>
           </relocations>
         </configuration>
