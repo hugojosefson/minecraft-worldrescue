@@ -175,7 +175,9 @@ public class WorldRescueCommandExecutor implements CommandExecutor {
   }
 
   public boolean save(Player player, String[] args) {
-    return save(player, args[0], args[1]);
+    final String worldToRebuild = args.length >= 1 ? args[0] : null;
+    final String index = args.length >= 2 ? args[1] : null;
+    return save(player, worldToRebuild, index);
   }
 
   public boolean save(final Player player, final String worldToRebuild, final String index) {
