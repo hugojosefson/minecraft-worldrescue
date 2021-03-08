@@ -30,6 +30,12 @@ public class BukkitBeans {
 
   @Bean
   @Autowired
+  public PluginDescriptionFile getPluginDescriptionFile(Plugin plugin) {
+    return plugin.getDescription();
+  }
+
+  @Bean
+  @Autowired
   public PluginCommand[] getPluginCommands(PluginDescriptionFile pd) {
     return pd.getCommands().keySet()
       .stream()
