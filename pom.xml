@@ -81,7 +81,7 @@
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.2.4</version>
         <configuration>
-          <finalName>${project.name}</finalName>
+          <finalName>${project.name}-${project.version}</finalName>
           <minimizeJar>true</minimizeJar>
           <shadedArtifactAttached>true</shadedArtifactAttached>
           <artifactSet>
