@@ -2,6 +2,7 @@ package com.hugojosefson.mc.worldrescue;
 
 import com.helospark.lightdi.annotation.Autowired;
 import com.helospark.lightdi.annotation.Bean;
+import com.helospark.lightdi.annotation.Component;
 import com.hugojosefson.mc.worldrescue.fn.BukkitFunctions;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -11,6 +12,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitScheduler;
 
+@Component
 public class BukkitBeans {
   @Bean
   public Server getServer() {
