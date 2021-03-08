@@ -88,18 +88,11 @@
           <artifactSet>
             <includes>
               <include>commons-io:commons-io</include>
-              <include>org.springframework:*</include>
             </includes>
           </artifactSet>
           <filters>
             <filter>
               <artifact>commons-io:commons-io</artifact>
-              <excludes>
-                <exclude>META-INF/*</exclude>
-              </excludes>
-            </filter>
-            <filter>
-              <artifact>org.springframework:*</artifact>
               <excludes>
                 <exclude>META-INF/*</exclude>
               </excludes>
@@ -110,10 +103,6 @@
               <pattern>org.apache.commons.io</pattern>
               <shadedPattern>shaded.${javaPackage}.vendor.org.apache.commons.io</shadedPattern>
             </relocation>
-<!--            <relocation>-->
-<!--              <pattern>org.springframework</pattern>-->
-<!--              <shadedPattern>shaded.${javaPackage}.vendor.org.springframework</shadedPattern>-->
-<!--            </relocation>-->
           </relocations>
         </configuration>
         <executions>
@@ -276,11 +265,6 @@
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>2.8.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
-      <version>5.3.4</version>
     </dependency>
   </dependencies>
   <distributionManagement>

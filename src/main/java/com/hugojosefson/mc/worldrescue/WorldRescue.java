@@ -1,67 +1,31 @@
 package com.hugojosefson.mc.worldrescue;
 
 import com.hugojosefson.mc.worldrescue.commands.WorldRescueCommandExecutor;
+import com.hugojosefson.mc.worldrescue.fn.BukkitFunctions;
 import com.hugojosefson.mc.worldrescue.schedulable.Schedulable;
-import java.util.stream.Stream;
-import org.bukkit.command.PluginCommand;
+import com.hugojosefson.mc.worldrescue.schedulable.Schedulables;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import static java.lang.String.join;
 import static java.text.MessageFormat.format;
 import static java.util.Arrays.stream;
 
 public class WorldRescue extends JavaPlugin {
-  @Autowired
-  private  PluginDescriptionFile pd;
-
-  @Autowired
-  private  FileConfiguration config;
-
-  @Autowired
-  private  BukkitScheduler scheduler;
-
-  @Autowired
-  private  Schedulable schedulable;
-//
-//  @Autowired
-//  private  List<Schedulable> schedulables;
-
-  @Autowired
-  private  WorldRescueCommandExecutor executor;
-
-  @Autowired
-  private  PluginCommand[] pluginCommands;
+  private PluginDescriptionFile pd;
+  private FileConfiguration config;
+  private BukkitScheduler scheduler;
+  private WorldRescueCommandExecutor executor;
+  private Schedulable[] schedulables;
 
   public void onEnable() {
-    final AnnotationConfigApplicationContext diContext = new AnnotationConfigApplicationContext();
-    diContext.registerBean(WorldRescue.class, bd -> {
-      bd.setLazyInit(true);
-      ((AbstractBeanDefinition)bd).setInstanceSupplier(() -> WorldRescue.this);
-    });
-    diContext.register(BukkitBeans.class);
-    diContext.scan(WorldRescue.class.getPackage().getName() + "commands");
-    diContext.scan(WorldRescue.class.getPackage().getName() + "fn");
-    diContext.scan(WorldRescue.class.getPackage().getName() + "io");
-    diContext.scan(WorldRescue.class.getPackage().getName() + "schedulable");
-    diContext.refresh();
-
-    final AutowireCapableBeanFactory autowireCapableBeanFactory = diContext.getAutowireCapableBeanFactory();
-
-    autowireCapableBeanFactory.autowireBean(this);
-
-
-    // TODO: interface PluginCommand {CommandExecutor getExecutor(); TabCompleter getTabCompleter()} ?
-    initPluginCommands(pluginCommands);
+    initDependencies();
     initConfig();
+    initPluginCommands();
     initSchedulables();
-
     System.out.println(format("[{0}] {1} (by {2}) enabled.", pd.getName(), pd.getVersion(), join(", ", pd.getAuthors())));
   }
 
@@ -69,9 +33,12 @@ public class WorldRescue extends JavaPlugin {
     System.out.println(format("[{0}] {1} (by {2}) disabled.", pd.getName(), pd.getVersion(), join(", ", pd.getAuthors())));
   }
 
-  private void initPluginCommands(final PluginCommand[] pluginCommands) {
-    stream(pluginCommands)
-      .forEach(pluginCommand -> pluginCommand.setExecutor(executor));
+  private void initDependencies() {
+    pd = getDescription();
+    config = getConfig();
+    scheduler = Bukkit.getScheduler();
+    executor = new WorldRescueCommandExecutor(this);
+    schedulables = Schedulables.getSchedulables(pd, config, getServer(), executor);
   }
 
   private void initConfig() {
@@ -79,9 +46,14 @@ public class WorldRescue extends JavaPlugin {
     saveConfig();
   }
 
+  private void initPluginCommands() {
+    pd.getCommands().keySet().stream()
+      .map(BukkitFunctions::getPluginCommand)
+      .forEach(pluginCommand -> pluginCommand.setExecutor(executor));
+  }
+
   private void initSchedulables() {
-//    schedulables.stream()
-    Stream.of(schedulable)
+    stream(schedulables)
       .filter(Schedulable::shouldSchedule)
       .forEach(schedulable -> scheduler.scheduleSyncRepeatingTask(
         this,

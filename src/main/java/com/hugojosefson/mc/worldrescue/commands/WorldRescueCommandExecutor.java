@@ -19,7 +19,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.hugojosefson.mc.worldrescue.fn.BukkitFunctions.displayName;
 import static com.hugojosefson.mc.worldrescue.fn.BukkitFunctions.resolveWorld;
@@ -42,7 +41,6 @@ public class WorldRescueCommandExecutor implements CommandExecutor {
     new SubCommandHandler("tp", WorldRescueCommandExecutor::tp)
   };
 
-  @Autowired
   public WorldRescueCommandExecutor(final WorldRescue plugin) {
     this.plugin = plugin;
   }
@@ -267,6 +265,7 @@ public class WorldRescueCommandExecutor implements CommandExecutor {
       load(worldName);
       while (!Bukkit.getServer().getWorlds().contains(Bukkit.getWorld(worldName))) {
         try {
+          //noinspection BusyWait
           Thread.sleep(50);
         } catch (InterruptedException ignored) {
         }

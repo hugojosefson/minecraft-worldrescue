@@ -5,16 +5,12 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class AutoSave extends AbstractSchedulable implements Schedulable {
   private final WorldRescueCommandExecutor executor;
   private final Server server;
   private final FileConfiguration config;
 
-  @Autowired
   public AutoSave(final WorldRescueCommandExecutor executor, final PluginDescriptionFile pd, final Server server, final FileConfiguration config) {
     super(pd);
     this.executor = executor;
