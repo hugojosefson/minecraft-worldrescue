@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 import java.util.function.BiFunction;
 
-import static com.hugojosefson.mc.worldrescue.commands.Commands.sendMessage;
+import static com.hugojosefson.mc.worldrescue.commands.WorldRescueCommandExecutor.sendMessage;
 
 /**
  * Handles one subcommand.

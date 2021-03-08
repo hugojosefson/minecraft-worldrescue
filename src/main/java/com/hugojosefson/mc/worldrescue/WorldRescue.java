@@ -1,7 +1,7 @@
 package com.hugojosefson.mc.worldrescue;
 
 import com.helospark.lightdi.LightDiContext;
-import com.hugojosefson.mc.worldrescue.commands.Commands;
+import com.hugojosefson.mc.worldrescue.commands.WorldRescueCommandExecutor;
 import com.hugojosefson.mc.worldrescue.schedulable.Schedulable;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,7 +19,7 @@ public class WorldRescue extends JavaPlugin {
   private final FileConfiguration config;
   private final BukkitScheduler scheduler;
   private final Schedulable[] schedulables;
-  private final Commands commands;
+  private final WorldRescueCommandExecutor executor;
   private final PluginCommand[] pluginCommands;
 
   public WorldRescue() {
@@ -30,7 +30,7 @@ public class WorldRescue extends JavaPlugin {
     this.pd = diContext.getBean(PluginDescriptionFile.class);
     this.scheduler = diContext.getBean(BukkitScheduler.class);
     this.schedulables = diContext.getBean(Schedulable[].class);
-    this.commands = diContext.getBean(Commands.class);
+    this.executor = diContext.getBean(WorldRescueCommandExecutor.class);
     this.config = diContext.getBean(FileConfiguration.class);
     this.pluginCommands = diContext.getBean(PluginCommand[].class);
   }
@@ -50,7 +50,7 @@ public class WorldRescue extends JavaPlugin {
 
   private void initPluginCommands() {
     stream(pluginCommands)
-      .forEach(pluginCommand -> pluginCommand.setExecutor(commands));
+      .forEach(pluginCommand -> pluginCommand.setExecutor(executor));
   }
 
   private void initConfig() {

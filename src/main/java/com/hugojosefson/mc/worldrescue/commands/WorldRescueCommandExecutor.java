@@ -30,21 +30,21 @@ import static java.util.Arrays.stream;
 import static org.apache.commons.lang.StringUtils.defaultString;
 import static org.apache.commons.lang.StringUtils.isBlank;
 
-public class Commands implements CommandExecutor {
+public class WorldRescueCommandExecutor implements CommandExecutor {
   public final WorldRescue plugin;
 
   private final SubCommandHandler[] subCommandHandlers = new SubCommandHandler[]{
-    new SubCommandHandler("free", Commands::free),
+    new SubCommandHandler("free", WorldRescueCommandExecutor::free),
     new SubCommandHandler("save", this::save),
     new SubCommandHandler("rebuild", this::rebuild),
-    new SubCommandHandler("delete", Commands::deleteBackup),
-    new SubCommandHandler("list", Commands::listBackups),
+    new SubCommandHandler("delete", WorldRescueCommandExecutor::deleteBackup),
+    new SubCommandHandler("list", WorldRescueCommandExecutor::listBackups),
     new SubCommandHandler("duplicate", this::duplicate),
-    new SubCommandHandler("tp", Commands::tp)
+    new SubCommandHandler("tp", WorldRescueCommandExecutor::tp)
   };
 
   @Autowired
-  public Commands(final WorldRescue plugin) {
+  public WorldRescueCommandExecutor(final WorldRescue plugin) {
     this.plugin = plugin;
   }
 
@@ -193,13 +193,13 @@ public class Commands implements CommandExecutor {
       final String backupIndex = defaultString(index, "default");
       final String backupName = worldName + "_" + backupIndex + "#backup";
 
-      Commands.sendMessage(player, ChatColor.GOLD + "Saving the world '" + worldName + "' (" + backupIndex + ")...");
+      sendMessage(player, ChatColor.GOLD + "Saving the world '" + worldName + "' (" + backupIndex + ")...");
 
       if (isDefaultWorld(world)) {
-        Commands.sendMessage(player, ChatColor.RED + "The world '" + worldName + "' is your default world. Due to a restriction with Bukkit, WorldRescue can not create/restore a backup.");
-        Commands.sendMessage(player, ChatColor.RED + "To solve this problem, type '" + ChatColor.GREEN + "/wr duplicate " + worldName + ChatColor.RED + "'.");
-        Commands.sendMessage(player, ChatColor.RED + "This will create the new world '" + worldName + "-new' which will be the same as the world '" + worldName + "' and WorldRescue will be able to create/restore backups from '" + worldName + "-new'.");
-        Commands.sendMessage(player, ChatColor.RED + "You can also open your server.config and change 'level-name' to point to another world.");
+        sendMessage(player, ChatColor.RED + "The world '" + worldName + "' is your default world. Due to a restriction with Bukkit, WorldRescue can not create/restore a backup.");
+        sendMessage(player, ChatColor.RED + "To solve this problem, type '" + ChatColor.GREEN + "/wr duplicate " + worldName + ChatColor.RED + "'.");
+        sendMessage(player, ChatColor.RED + "This will create the new world '" + worldName + "-new' which will be the same as the world '" + worldName + "' and WorldRescue will be able to create/restore backups from '" + worldName + "-new'.");
+        sendMessage(player, ChatColor.RED + "You can also open your server.config and change 'level-name' to point to another world.");
         return;
       }
 
@@ -234,13 +234,13 @@ public class Commands implements CommandExecutor {
       final String backupIndex = defaultString(index, "default");
       final String backupName = worldName + "_" + backupIndex + "#backup";
 
-      Commands.sendMessage(player, ChatColor.GOLD + "Rebuilding the world '" + worldName + "' (" + backupIndex + ")...");
+      sendMessage(player, ChatColor.GOLD + "Rebuilding the world '" + worldName + "' (" + backupIndex + ")...");
 
       if (isDefaultWorld(world)) {
-        Commands.sendMessage(player, ChatColor.RED + "The world '" + worldName + "' is your default world. Due to a restriction with Bukkit, WorldRescue can not create/restore a backup.");
-        Commands.sendMessage(player, ChatColor.RED + "To solve this problem, type '" + ChatColor.GREEN + "/wr duplicate " + worldName + ChatColor.RED + "'.");
-        Commands.sendMessage(player, ChatColor.RED + "This will create the new world '" + worldName + "-new' which will be the same as the world '" + worldName + "' and WorldRescue will be able to create/restore backups from '" + worldName + "-new'.");
-        Commands.sendMessage(player, ChatColor.RED + "You can also open your server.config and change 'level-name' to point to another world.");
+        sendMessage(player, ChatColor.RED + "The world '" + worldName + "' is your default world. Due to a restriction with Bukkit, WorldRescue can not create/restore a backup.");
+        sendMessage(player, ChatColor.RED + "To solve this problem, type '" + ChatColor.GREEN + "/wr duplicate " + worldName + ChatColor.RED + "'.");
+        sendMessage(player, ChatColor.RED + "This will create the new world '" + worldName + "-new' which will be the same as the world '" + worldName + "' and WorldRescue will be able to create/restore backups from '" + worldName + "-new'.");
+        sendMessage(player, ChatColor.RED + "You can also open your server.config and change 'level-name' to point to another world.");
         return;
       }
 
