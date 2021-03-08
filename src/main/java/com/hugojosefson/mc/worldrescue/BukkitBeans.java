@@ -1,52 +1,43 @@
 package com.hugojosefson.mc.worldrescue;
 
-import com.helospark.lightdi.annotation.Autowired;
-import com.helospark.lightdi.annotation.Bean;
-import com.helospark.lightdi.annotation.Component;
 import com.hugojosefson.mc.worldrescue.fn.BukkitFunctions;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import java.util.Optional;
-
-@Component
+@Configuration
 public class BukkitBeans {
   @Bean
-  public Server getServer() {
+  public Server server() {
     return Bukkit.getServer();
   }
 
   @Bean
-  public BukkitScheduler getScheduler() {
+  public BukkitScheduler scheduler() {
     return Bukkit.getScheduler();
   }
 
   @Bean
   @Autowired
-  public FileConfiguration getConfig(Plugin plugin) {
+  public FileConfiguration config(@Autowired final WorldRescue plugin) {
     return plugin.getConfig();
   }
 
   @Bean
   @Autowired
-  public PluginDescriptionFile getPluginDescriptionFile(Plugin plugin) {
+  public PluginDescriptionFile pluginDescriptionFile(@Autowired final WorldRescue plugin) {
     return plugin.getDescription();
   }
 
   @Bean
   @Autowired
-  public Optional<PluginDescriptionFile> getOptionalPluginDescriptionFile(Plugin plugin) {
-    return Optional.of(getPluginDescriptionFile(plugin));
-  }
-
-  @Bean
-  @Autowired
-  public PluginCommand[] getPluginCommands(PluginDescriptionFile pd) {
+  public PluginCommand[] pluginCommands(@Autowired final PluginDescriptionFile pd) {
     return pd.getCommands().keySet()
       .stream()
       .map(BukkitFunctions::getPluginCommand).toArray(PluginCommand[]::new);

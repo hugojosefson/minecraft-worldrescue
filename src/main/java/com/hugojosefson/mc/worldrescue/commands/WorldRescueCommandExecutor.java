@@ -1,8 +1,12 @@
 package com.hugojosefson.mc.worldrescue.commands;
 
-import com.helospark.lightdi.annotation.Autowired;
 import com.hugojosefson.mc.worldrescue.WorldRescue;
 import com.hugojosefson.mc.worldrescue.io.Io;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -15,12 +19,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.hugojosefson.mc.worldrescue.fn.BukkitFunctions.displayName;
 import static com.hugojosefson.mc.worldrescue.fn.BukkitFunctions.resolveWorld;
