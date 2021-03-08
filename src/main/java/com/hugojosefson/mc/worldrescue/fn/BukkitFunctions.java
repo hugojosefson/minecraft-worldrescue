@@ -40,4 +40,5 @@ public class BukkitFunctions {
     if (pluginCommand == null) throw new PluginCommandNotFoundException(command);
     return pluginCommand;
   }
+
 }
