@@ -121,19 +121,19 @@
           <relocations>
             <relocation>
               <pattern>org.apache.commons.io</pattern>
-              <shadedPattern>${javaPackage}.vendor.org.apache.commons.io</shadedPattern>
+              <shadedPattern>shaded.${javaPackage}.vendor.org.apache.commons.io</shadedPattern>
             </relocation>
             <relocation>
               <pattern>com.helospark.lightdi</pattern>
-              <shadedPattern>${javaPackage}.vendor.com.helospark.lightdi</shadedPattern>
+              <shadedPattern>shaded.${javaPackage}.vendor.com.helospark.lightdi</shadedPattern>
             </relocation>
             <relocation>
               <pattern>io.github.lukehutch.fastclasspathscanner</pattern>
-              <shadedPattern>${javaPackage}.vendor.io.github.lukehutch.fastclasspathscanner</shadedPattern>
+              <shadedPattern>shaded.${javaPackage}.vendor.io.github.lukehutch.fastclasspathscanner</shadedPattern>
             </relocation>
             <relocation>
               <pattern>javax.annotation:javax.annotation-api</pattern>
-              <shadedPattern>${javaPackage}.vendor.javax.annotation</shadedPattern>
+              <shadedPattern>shaded.${javaPackage}.vendor.javax.annotation</shadedPattern>
             </relocation>
           </relocations>
         </configuration>
